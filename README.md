@@ -1,6 +1,8 @@
 # charity-base-data
 This directory contains several scripts for constructing the CharityBase database on your own computer.
 
+**_Note:_** This is only necessary for advanced usage / customisation.  Most users can just use the [public API](https://github.com/tythe-org/charity-base-api).
+
 - [Downloading the Register](#downloading-the-register)
 - [Converting to CSV](#converting-to-csv)
 - [Loading to MongoDB](#loading-to-mongodb)
