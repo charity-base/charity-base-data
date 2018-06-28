@@ -1,0 +1,16 @@
+{
+  "name": "es_index",
+  "version": "1.0.0",
+  "description": "",
+  "main": "es_index.js",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "mongoosastic": "^4.4.1",
+    "mongoose": "^4.6.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
