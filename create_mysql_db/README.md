@@ -22,4 +22,4 @@ pip install -r requirements.txt
 * `python create.py`
 
 ## Next Steps
-After successfully creating a MySQL database you can now convert it to the CharityBase document database (in MongoDB) using the scripts in [charity-base-data/create_mongo_db](#create_mongo_db).
+After successfully creating a MySQL database you can now convert it to the CharityBase document database (in MongoDB) using the scripts in [charity-base-data/create_mongo_db](../create_mongo_db).
