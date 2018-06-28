@@ -1,4 +1,4 @@
-# create_mysql_db
+# charity-base-data/create_mysql_db
 
 A script to create a MySQL database of the Charity Commission's register extract (files downloadable from http://data.charitycommission.gov.uk/ under the [Open Government Licence](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)).
 
@@ -22,4 +22,4 @@ pip install -r requirements.txt
 * `python create.py`
 
 ## Next Steps
-After successfully creating a MySQL database you can now convert it to the CharityBase document database (in MongoDB) using the scripts in `charity-base-data/create_mongo_db`.
+After successfully creating a MySQL database you can now convert it to the CharityBase document database (in MongoDB) using the scripts in [charity-base-data/create_mongo_db](#create_mongo_db).
