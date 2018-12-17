@@ -13,6 +13,7 @@
     "bunyan": "^1.8.12",
     "charity-base-schema": "github:charity-base/charity-base-schema#v2.8.4",
     "cli-progress": "^2.1.0",
+    "fast-csv": "^2.4.1",
     "json-to-jsonl": "^1.1.0",
     "mallet-topics": "^2.1.0",
     "mongoose": "^5.2.16",
