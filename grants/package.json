@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "bunyan": "^1.8.12",
-    "charity-base-schema": "github:charity-base/charity-base-schema#v2.8.1",
+    "charity-base-schema": "github:charity-base/charity-base-schema#v2.8.4",
     "cli-progress": "^2.1.0",
     "json-to-jsonl": "^1.1.0",
     "mallet-topics": "^2.1.0",
