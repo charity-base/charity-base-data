@@ -16,7 +16,7 @@ pip install -r requirements.txt
 ## Instructions
 * Update `MONGO_DATABASE` in `cc_beta/settings.py`
 * (Optional) Set the starting page number in `CharitiesSpider.start_urls`
-* `scrapy crawl charities`
+* `scrapy crawl charities --loglevel INFO`
 
 ## Next Steps
 [charity-base-data/es_index](../es_index)
