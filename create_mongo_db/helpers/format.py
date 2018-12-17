@@ -18,3 +18,12 @@ def stripped_or_none(v, case=None):
 
 def boolean_on_value(v, true_value):
     return True if stripped_or_none(v) == true_value else False
+
+def boolean_on_values(v, true_values):
+    return True if stripped_or_none(v) in true_values else False
+
+def int_or_none(integer_string):
+    try:
+        return int(integer_string.strip().replace(',', ''))
+    except:
+        return None
