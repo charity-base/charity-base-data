@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 import logging
 from pymongo import MongoClient
 from sqlalchemy.orm import session
@@ -9,6 +9,9 @@ from schema_conversion.trustees import update_trustees
 from schema_conversion.aoo import update_aoo
 from schema_conversion.classification import update_causes, update_beneficiaries, update_operations
 from schema_conversion.finances import update_financial
+from schema_conversion.objectives import update_objectives
+from schema_conversion.partb import update_partb
+from schema_conversion.registration import update_registration
 from schema_conversion.subsidiaries import update_subsidiaries
 from schema_conversion.names import update_names
 from config import SQL_DB_USER, SQL_DB_HOST, SQL_DB_NAME, MONGO_DB_HOST, MONGO_DB_NAME, MONGO_DB_COLLECTION
@@ -39,13 +42,15 @@ def main():
 		update_beneficiaries(sess, charity_collection, lower_limit, upper_limit)
 		update_operations(sess, charity_collection, lower_limit, upper_limit)
 		update_financial(sess, charity_collection, lower_limit, upper_limit)
+		update_objectives(sess, charity_collection, lower_limit, upper_limit)
+		update_partb(sess, charity_collection, lower_limit, upper_limit)
+		update_registration(sess, charity_collection, lower_limit, upper_limit)
 		update_subsidiaries(sess, charity_collection, lower_limit, upper_limit)
 		update_names(sess, charity_collection, lower_limit, upper_limit)
 
 		# TODO:
-		# ExtractAcctSubmit, ExtractArSubmit, ExtractPartB
-		# ExtractObjects, ExtractRegistration, ExtractRemoveRef
-		# ExtractName for subsidiaries
+		# ExtractAcctSubmit, ExtractArSubmit
+		# ExtractName, ExtractRegistration, ExtractObjects for subsidiaries
 		# Add non-registered charities
 
 	except:
