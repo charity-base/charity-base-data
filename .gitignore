@@ -1,3 +1,10 @@
+git_ignore
+
+# Mallet data
+grants/mallet/data
+*.mallet
+*.tsv
+
 # Charity Commission data
 *.zip
 *.bcp
