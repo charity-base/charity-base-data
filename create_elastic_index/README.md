@@ -1,4 +1,4 @@
-# charity-base-data/es_index
+# MongoDB -> Elasticsearch
 
 Once you've created the CharityBase database in MongoDB these scripts will help you load the data into Elasticsearch which enables fast searching and filtering.
 
@@ -8,11 +8,16 @@ Once you've created the CharityBase database in MongoDB these scripts will help 
   * You must also have created a database using [charity-base-data/create_mongo_db](../create_mongo_db) and added any supplementary data.
 * Elasticsearch (download and make sure it's listening on the default port `9200`)
 
-## Installation
-```shell
+## Install
+
+```
 npm install
 ```
 
-## Instructions
-* Choose new index in line `charitySchema.plugin(mongoosastic, { index: 'charity-base' })` of `Charity.js`
-* `node es_index.js`
+## Map
+
+Make sure you are in the `charity-base-data/create_elastic_index` directory, then run:
+
+```
+npm start
+```
