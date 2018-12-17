@@ -15,4 +15,9 @@ pip install -r requirements.txt
 
 ## Instructions
 * Update `MONGO_DATABASE` in `settings.py`
+* `cd cc_beta`
 * `scrapy crawl charities`
+* You can resume scraping from a particular point by updating `start_urls` in `charities_spider.py`
+
+## Next Steps
+[charity-base-data/es_index](../es_index)
