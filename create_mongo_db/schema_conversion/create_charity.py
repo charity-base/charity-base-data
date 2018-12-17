@@ -51,6 +51,7 @@ def create_charity(charity, main_charity):
     c['registration'] = []
 
     c['activities'] = None
+    c['people'] = {}
     c['objectives'] = None
     
     return c
