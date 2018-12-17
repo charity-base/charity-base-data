@@ -17,7 +17,7 @@ ITEM_PIPELINES = {
 }
 
 MONGO_URI = 'mongodb://localhost:27017'
-MONGO_DATABASE = 'charity-base'
+MONGO_DATABASE = 'charity-base-v284-nov-2018'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
