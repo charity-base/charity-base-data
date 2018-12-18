@@ -19,4 +19,4 @@ pip install -r requirements.txt
 * `scrapy crawl charities --loglevel INFO`
 
 ## Next Steps
-[charity-base-data/es_index](../es_index)
+[charity-base-data/geo](../geo)
