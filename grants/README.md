@@ -7,25 +7,24 @@ npm install
 
 ## Write JSON Lines
 
-Download GrantNav JSON file & update the file path `grantNavJSON` in `config.json`
-
-```
-node --max-old-space-size=4096 src/write-json-lines.js
-```
+* [Download GrantNav JSON](http://grantnav.threesixtygiving.org/developers)
+* Update GrantNav JSON file path in `config.json`
+* `$ node --max-old-space-size=4096 src/write-json-lines.js`
 
 ## Load JSON Lines to MongoDB
 
+Replace db name and .jsonl filepath accordingly:
+
 ```
-mongoimport --db charity-base --collection grants --file /path/to/grantnav-20180731084014.jsonl
+$ mongoimport --db charity-base --collection grants --file /path/to/grantnav-20180731084014.jsonl
 ```
 
 ## Classify Grants
 
-Make sure you are in the `charity-base-data/grants` directory, then run:
+* Update db.name in `config.json`
+* Ensure classification inputDir in `config.json` does _not_ exist
+* `$ npm start`
 
-```
-npm start
-```
 
 This script does the following:
 * Parse the grant recipient id looking for a charity number (England & Wales) & set as a new field `recipientOrganization.GB-CHC`
@@ -34,3 +33,6 @@ This script does the following:
 * Perform topic modelling to extract common themes (number of themes defined in `config.classification.trainOpts.numTopics`)
 * Set the grant topic scores as a new field `topicModelling.topics`
 * Appends the grants to the appropriate charity in the `charities` collection
+
+## Next Steps
+[charity-base-data/create_elastic_index](../create_elastic_index)
