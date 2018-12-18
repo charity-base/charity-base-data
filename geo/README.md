@@ -8,10 +8,10 @@ Fetches geo properties of registered charity addresses using [postcodes.io](http
 npm install
 ```
 
-## Geocode
+## Instructions
 
-Make sure you are in the `charity-base-data/geo` directory, then run:
+* Update db.name in `config.json`
+* `npm start`
 
-```
-npm start
-```
+## Next Steps
+[charity-base-data/grants](../grants)
