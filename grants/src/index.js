@@ -85,6 +85,7 @@ const classifyGrantsToCharities = () => {
   .then(counter => {
     progressBar.update(NUM_CHARITY_GRANTS_ESTIMATE)
     progressBar.stop()
+    return counter
   })
   .then(counter => {
     log.info(`Successfully classified & pushed ${counter} grants`)
