@@ -2,9 +2,9 @@
   "name": "charity-base-data-elastic",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.js",
+  "main": "./index.js",
   "scripts": {
-    "start": "node src/index.js | ./node_modules/bunyan/bin/bunyan",
+    "start": "node index.js | ./node_modules/bunyan/bin/bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
