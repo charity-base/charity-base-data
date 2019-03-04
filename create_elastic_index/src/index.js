@@ -1,16 +1,14 @@
-const elasticsearch = require('elasticsearch')
 const { elasticMapping } = require('charity-base-schema')
 const insert = require('./stream-processor')
-const { db, es } = require('../config')
+const esClient = require('./elastic-client')
+const { db, elastic } = require('../config')
 const { log, connectToDb, Charity, getProgressBar } = require('./helpers')
 
 const NUM_CHARITIES_ESTIMATE = 170000
 
-es.client = new elasticsearch.Client({ host: es.host })
-
 const createIndex = () => new Promise((resolve, reject) => {
-  es.client.indices.create({
-    index: es.index,
+  esClient.indices.create({
+    index: elastic.index,
     body: {
       settings: {
         'index.mapping.coerce': true,
@@ -37,9 +35,9 @@ const esIndex = () => {
     progressBar = getProgressBar('Indexing charities')
     progressBar.start(NUM_CHARITIES_ESTIMATE, 0)
     return insert(
-      Charity, 
-      es.client, 
-      es.index,
+      Charity,
+      esClient,
+      elastic.index,
       progressBar.update.bind(progressBar),
     )
   })

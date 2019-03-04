@@ -10,10 +10,12 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.413.0",
     "bunyan": "^1.8.12",
     "charity-base-schema": "github:charity-base/charity-base-schema#v3.0.0",
     "cli-progress": "^2.1.0",
     "elasticsearch": "^15.1.1",
+    "http-aws-es": "^6.0.0",
     "mongoose": "^5.2.16",
     "stream-batch-promise": "^1.1.1"
   }

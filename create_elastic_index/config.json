@@ -4,8 +4,9 @@
     "port": "27017",
     "name": "charity-base"
   },
-  "es": {
-    "host": "localhost:9200",
+  "elastic" : {
+    "host": "https://charity-base.eu-west-2.es.amazonaws.com",
+    "region": "eu-west-2",
     "index": "charity-base"
   }
 }
