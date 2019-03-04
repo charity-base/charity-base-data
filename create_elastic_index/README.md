@@ -4,8 +4,6 @@ Once you've created and supplemented the CharityBase database these scripts will
 
 ## Requirements
 * Node
-* MongoDB (download and make sure it's listening on the default port `27017`)
-* Elasticsearch (download and make sure it's listening on the default port `9200`)
 
 ## Install
 
@@ -15,5 +13,5 @@ npm install
 
 ## Instructions
 
-* Update db name and index name in `config.json`
+* Update db and index creds in `config.json`
 * `npm start`
