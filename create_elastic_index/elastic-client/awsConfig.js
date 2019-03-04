@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk')
-const config = require('../../config')
+const config = require('../config')
 
 // If creds found in env variables use these, otherwise look for them in standard location
 const accessKeyId = process.env.CHARITY_BASE_ES_AWS_ACCESS_KEY_ID

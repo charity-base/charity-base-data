@@ -1,7 +1,8 @@
+require('dotenv').config()
 const { elasticMapping } = require('charity-base-schema')
 const insert = require('./stream-processor')
 const esClient = require('./elastic-client')
-const { db, elastic } = require('../config')
+const { db, elastic } = require('./config')
 const { log, connectToDb, Charity, getProgressBar } = require('./helpers')
 
 const NUM_CHARITIES_ESTIMATE = 170000
