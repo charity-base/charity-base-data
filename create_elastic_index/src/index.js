@@ -15,6 +15,7 @@ const createIndex = () => new Promise((resolve, reject) => {
       settings: {
         'index.mapping.coerce': true,
         'index.mapping.ignore_malformed': false,
+        'index.requests.cache.enable': true,
       },
       mappings: elasticMapping()
     }
