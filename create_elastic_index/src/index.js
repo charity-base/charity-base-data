@@ -13,7 +13,8 @@ const createIndex = () => new Promise((resolve, reject) => {
     index: es.index,
     body: {
       settings: {
-        'index.mapping.ignore_malformed': false 
+        'index.mapping.coerce': true,
+        'index.mapping.ignore_malformed': false,
       },
       mappings: elasticMapping()
     }
