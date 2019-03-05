@@ -1,0 +1,12 @@
+{
+  "db": {
+    "host": "localhost",
+    "port": "27017",
+    "name": "charity-base"
+  },
+  "elastic" : {
+    "host": "https://charity-base.eu-west-2.es.amazonaws.com",
+    "region": "eu-west-2",
+    "index": "charity-base"
+  }
+}

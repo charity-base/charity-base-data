@@ -15,11 +15,13 @@ def create_charity(charity, main_charity):
     c['governingDoc'] = stripped_or_none(charity.gd)
     c['areaOfBenefit'] = stripped_or_none(charity.aob, 'title')
     c['contact'] = {
+        'address': [stripped_or_none(getattr(charity, add), 'title') for add in ['add1', 'add2', 'add3', 'add4', 'add5'] if getattr(charity, add) != None],
         'email': stripped_or_none(main_charity.email, 'lower'),
+        'geo': None,
+        'geoCoords': None,
         'person': stripped_or_none(charity.corr, 'title'),
         'phone': stripped_or_none(charity.phone),
         'postcode': stripped_or_none(charity.postcode),
-        'address': [stripped_or_none(getattr(charity, add), 'title') for add in ['add1', 'add2', 'add3', 'add4', 'add5'] if getattr(charity, add) != None]
     }
     c['isWelsh'] = boolean_on_value(main_charity.welsh, 'T')
 
@@ -34,7 +36,8 @@ def create_charity(charity, main_charity):
             'date': main_charity.incomedate,
             'total': int(main_charity.income) if main_charity.income != None else None,
         },
-        'annual': []
+        'annual': [],
+        'breakdown': [],
     }
     c['fyend'] = stripped_or_none(main_charity.fyend)
     c['companiesHouseNumber'] = stripped_or_none(main_charity.coyno)
@@ -45,8 +48,12 @@ def create_charity(charity, main_charity):
     c['operations'] = []
     c['subsidiaries'] = []
     c['alternativeNames'] = []
+    c['registration'] = []
 
     c['activities'] = None
+    c['people'] = {}
+    c['objectives'] = None
+    c['grants'] = []
     
     return c
 

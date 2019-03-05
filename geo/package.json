@@ -1,0 +1,20 @@
+{
+  "name": "charity-base-data-geo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "node src/index.js | ./node_modules/bunyan/bin/bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "charity-base-schema": "github:charity-base/charity-base-schema#v2.8.4",
+    "cli-progress": "^2.1.0",
+    "mongoose": "^5.2.16",
+    "node-fetch": "^2.2.0",
+    "stream-batch-promise": "^1.1.1"
+  }
+}

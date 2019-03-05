@@ -18,3 +18,6 @@ pip install -r requirements.txt
 * Update `SQL_DB_NAME` in `config.py`
 * Choose new `MONGO_DB_NAME` in `config.py`
 * `python convert.py`
+
+## Next Steps
+[charity-base-data/scrapy](../scrapy)
