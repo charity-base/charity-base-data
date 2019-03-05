@@ -26,6 +26,20 @@ const createIndex = () => new Promise((resolve, reject) => {
   })
 })
 
+const deleteIndex = () => new Promise((resolve, reject) => {
+  esClient.indices.delete({
+    index: elastic.index,
+  }, (err, res) => {
+    if (err) {
+      log.error(`Failed to delete index '${elastic.index}'`)
+      log.error(err)
+      return reject(err)
+    }
+    log.info(`Index deleted '${elastic.index}'`)
+    log.info(res)
+    return resolve(res)
+  })
+})
 
 const esIndex = () => {
   let progressBar
@@ -55,3 +69,4 @@ const esIndex = () => {
 }
 
 esIndex()
+// deleteIndex()
