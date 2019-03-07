@@ -1,6 +1,6 @@
 import logging
 from pymongo.errors import BulkWriteError
-from helpers.format import stripped_or_none, boolean_on_value
+from helpers.format import stripped_or_none, boolean_on_value, validate_coh_id
 from schema.models import ExtractCharity, ExtractMainCharity
 
 def create_charity(charity, main_charity):
@@ -40,7 +40,7 @@ def create_charity(charity, main_charity):
         'breakdown': [],
     }
     c['fyend'] = stripped_or_none(main_charity.fyend)
-    c['companiesHouseNumber'] = stripped_or_none(main_charity.coyno)
+    c['companiesHouseNumber'] = validate_coh_id(stripped_or_none(main_charity.coyno))
 
     c['areasOfOperation'] = []
     c['causes'] = []
