@@ -4,10 +4,17 @@ from pymongo.errors import BulkWriteError
 from helpers.format import stripped_or_none
 from schema.models import ExtractMainCharity, ExtractRegistration, ExtractRemoveRef
 
+def get_latest_registration(registrations):
+    if not registrations or len(registrations) == 0:
+      return None
+    active_registration_dates = [x['registrationDate'] for x in registrations if not x['removalDate']]
+    if len(active_registration_dates) == 0:
+      return None
+    return sorted(active_registration_dates, reverse=True)[0]
 
 def update_registration(session, charity_collection, lower_limit, upper_limit, batch_size=1000):
 
-    logging.info("Updating registration.")
+    logging.info("Updating registrations.")
     while lower_limit <= upper_limit:
         q = session\
         .query(ExtractMainCharity.regno, ExtractRegistration, ExtractRemoveRef)\
@@ -17,25 +24,29 @@ def update_registration(session, charity_collection, lower_limit, upper_limit, b
         .filter(ExtractMainCharity.regno >= lower_limit)\
         .filter(ExtractMainCharity.regno < lower_limit + batch_size)
 
-        registration = {}
+        registrations = {}
         for i, x in enumerate(q):
             regno = x.ExtractRegistration.regno
             
-            if regno not in registration:
-                registration[regno] = []
+            if regno not in registrations:
+                registrations[regno] = []
 
-            registration[regno].append({
-                'registered': x.ExtractRegistration.regdate,
-                'removed': x.ExtractRegistration.remdate,
-                'removedCode': stripped_or_none(x.ExtractRemoveRef.code) if x.ExtractRemoveRef else None,
-                'removedReason': stripped_or_none(x.ExtractRemoveRef.text) if x.ExtractRemoveRef else None,
+            registrations[regno].append({
+                'registrationDate': x.ExtractRegistration.regdate,
+                'removalDate': x.ExtractRegistration.remdate,
+                'removalCode': stripped_or_none(x.ExtractRemoveRef.code) if x.ExtractRemoveRef else None,
+                'removalReason': stripped_or_none(x.ExtractRemoveRef.text) if x.ExtractRemoveRef else None,
             })
-            
             
         requests = [UpdateOne(
             {'ids.GB-CHC': i},
-            {'$set': {'registration': registration[i]}}
-        ) for i in registration.keys()]
+            {
+                '$set': {
+                    'registrations': sorted(registrations[i], key=lambda x: x['registrationDate'], reverse=True),
+                    'lastRegistrationDate': get_latest_registration(registrations[i])
+                }
+            }
+        ) for i in registrations.keys()]
         
         logging.info(lower_limit)
         
