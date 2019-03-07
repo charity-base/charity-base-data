@@ -73,7 +73,7 @@ def update_partb(session, charity_collection, lower_limit, upper_limit, batch_si
             
         requests = [UpdateOne(
             {'ids.GB-CHC': i},
-            {'$set': {'income.breakdown': partb[i]}}
+            {'$set': {'financial.breakdown': partb[i]}}
         ) for i in partb.keys()]
         
         logging.info(lower_limit)

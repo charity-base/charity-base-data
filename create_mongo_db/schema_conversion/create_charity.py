@@ -31,10 +31,14 @@ def create_charity(charity, main_charity):
     }
     c['website'] = stripped_or_none(main_charity.web, 'lower')
     c['isSchool'] = boolean_on_value(main_charity.grouptype, 'SCH')
-    c['income'] = {
+    c['financial'] = {
         'latest': {
-            'date': main_charity.incomedate,
-            'total': int(main_charity.income) if main_charity.income != None else None,
+            'financialYear': {
+                'begin': None,
+                'end': None,
+            },
+            'income': None,
+            'spending': None,
         },
         'annual': [],
         'breakdown': [],

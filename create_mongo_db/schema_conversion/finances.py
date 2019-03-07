@@ -4,6 +4,15 @@ from pymongo.errors import BulkWriteError
 from helpers.format import stripped_or_none
 from schema.models import ExtractMainCharity, ExtractFinancial
 
+def get_sorted_finances(finances):
+    return sorted(finances, key=lambda x: x['financialYear']['end'], reverse=True)
+
+def get_finance_fields(finances):
+    sorted_finances = get_sorted_finances(finances)
+    return {
+        'financial.annual': sorted_finances,
+        'financial.latest': sorted_finances[0] if (sorted_finances and len(sorted_finances) > 0) else {},
+    }
 
 def update_financial(session, charity_collection, lower_limit, upper_limit, batch_size=1000):
 
@@ -12,6 +21,8 @@ def update_financial(session, charity_collection, lower_limit, upper_limit, batc
         q = session\
         .query(ExtractMainCharity.regno, ExtractFinancial)\
         .join(ExtractFinancial, ExtractFinancial.regno==ExtractMainCharity.regno)\
+        .filter(ExtractFinancial.income != None)\
+        .filter(ExtractFinancial.expend != None)\
         .filter(ExtractMainCharity.regno >= lower_limit)\
         .filter(ExtractMainCharity.regno < lower_limit + batch_size)
 
@@ -30,14 +41,16 @@ def update_financial(session, charity_collection, lower_limit, upper_limit, batc
                     'begin': x.ExtractFinancial.fystart,
                     'end': x.ExtractFinancial.fyend,
                 },
-                'income': int(x.ExtractFinancial.income) if x.ExtractFinancial.income else None,
-                'expend': int(x.ExtractFinancial.expend) if x.ExtractFinancial.expend else None,
+                'income': float(x.ExtractFinancial.income),
+                'spending': float(x.ExtractFinancial.expend),
             })
             
             
         requests = [UpdateOne(
             {'ids.GB-CHC': i},
-            {'$set': {'income.annual': financial[i]}}
+            {
+                '$set': get_finance_fields(financial[i])
+            }
         ) for i in financial.keys()]
         
         logging.info(lower_limit)
