@@ -4,6 +4,7 @@
   "description": "",
   "main": "./index.js",
   "scripts": {
+    "delete": "node delete.js",
     "start": "node index.js | ./node_modules/bunyan/bin/bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
