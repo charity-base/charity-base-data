@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { mongooseSchema } = require('charity-base-schema')
 mongoose.Promise = global.Promise
 
 const connectToDb = ({ host, port, name }, config) => {
@@ -13,7 +12,7 @@ const connectToDb = ({ host, port, name }, config) => {
 
 const Charity = mongoose.model(
   'Charity',
-  mongooseSchema.charity(mongoose)
+  new mongoose.Schema({})
 )
 
 module.exports = {
