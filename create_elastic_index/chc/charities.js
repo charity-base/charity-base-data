@@ -1,9 +1,9 @@
 require('dotenv').config()
 const { chc } = require('charity-base-schema')
-const insert = require('../stream-processor')
+const streamBatchPromise = require('stream-batch-promise')
 const esClient = require('../elastic-client')
 const { db, elastic } = require('../config')
-const { log, connectToDb, Charity, getProgressBar } = require('../helpers')
+const { log, connectToDb, Charity, getProgressBar, bulkInsert } = require('../helpers')
 
 const NUM_CHARITIES_ESTIMATE = 170000
 
@@ -51,11 +51,18 @@ const esIndex = () => {
   .then(() => {
     progressBar = getProgressBar('Indexing charities')
     progressBar.start(NUM_CHARITIES_ESTIMATE, 0)
-    return insert(
-      Charity,
-      esClient,
-      elastic.index,
-      progressBar.update.bind(progressBar),
+    return streamBatchPromise(
+      Charity.find().cursor(),
+      x => x.toJSON(),
+      (parsedItems, counter) => {
+        progressBar.update(counter)
+        return bulkInsert(
+          parsedItems,
+          esClient,
+          elastic.index
+        )
+      },
+      { batchSize: 1000 },
     )
   })
   .then(counter => {
