@@ -1,7 +1,3 @@
-const streamBatchPromise = require('stream-batch-promise')
-
-const parser = x => x.toJSON()
-
 const bulkInsert = (parsedItems, client, _index) => {
   const body = parsedItems.reduce((agg, x) => {
     const { _id, ...charityWithoutId } = x
@@ -35,18 +31,6 @@ const bulkInsert = (parsedItems, client, _index) => {
   })
 }
 
-const insert = (Charity, esClient, esIndex, onCounterChange) => streamBatchPromise(
-  Charity.find().cursor(),
-  parser,
-  (parsedItems, counter) => {
-    onCounterChange(counter)
-    return bulkInsert(
-      parsedItems,
-      esClient,
-      esIndex
-    )
-  },
-  { batchSize: 1000 },
-)
-
-module.exports = insert
+module.exports = {
+  bulkInsert,
+}
