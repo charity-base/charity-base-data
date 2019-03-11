@@ -1,4 +1,3 @@
-require('dotenv').config()
 const { chc } = require('charity-base-schema')
 const streamBatchPromise = require('stream-batch-promise')
 const esClient = require('../elastic-client')
