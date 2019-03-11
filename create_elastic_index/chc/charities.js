@@ -5,10 +5,12 @@ const { db, elastic } = require('../config')
 const { log, connectToDb, Charity, getProgressBar, bulkInsert } = require('../helpers')
 
 const NUM_CHARITIES_ESTIMATE = 170000
+const INDEX = elastic.indices.chc.charities
+
 
 const createIndex = () => new Promise((resolve, reject) => {
   esClient.indices.create({
-    index: elastic.index,
+    index: INDEX,
     body: {
       settings: {
         'index.mapping.coerce': true,
@@ -29,14 +31,14 @@ const createIndex = () => new Promise((resolve, reject) => {
 
 const deleteIndex = () => new Promise((resolve, reject) => {
   esClient.indices.delete({
-    index: elastic.index,
+    index: INDEX,
   }, (err, res) => {
     if (err) {
-      log.error(`Failed to delete index '${elastic.index}'`)
+      log.error(`Failed to delete index '${INDEX}'`)
       log.error(err)
       return reject(err)
     }
-    log.info(`Index deleted '${elastic.index}'`)
+    log.info(`Index deleted '${INDEX}'`)
     log.info(res)
     return resolve(res)
   })
@@ -58,7 +60,7 @@ const esIndex = () => {
         return bulkInsert(
           parsedItems,
           esClient,
-          elastic.index
+          INDEX
         )
       },
       { batchSize: 1000 },
