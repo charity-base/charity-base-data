@@ -1,58 +1,44 @@
+const mongoose = require('mongoose')
 const { chc } = require('charity-base-schema')
 const streamBatchPromise = require('stream-batch-promise')
 const esClient = require('../elastic-client')
 const { db, elastic } = require('../config')
-const { log, connectToDb, Charity, getProgressBar, bulkInsert } = require('../helpers')
+const { log, Charity, getProgressBar, bulkInsert } = require('../helpers')
 
-const NUM_CHARITIES_ESTIMATE = 170000
+const NUM_DOCS_ESTIMATE = 170000
 const INDEX = elastic.indices.chc.charities
+const INDEX_SETTINGS = {
+  'index.mapping.coerce': true,
+  'index.mapping.ignore_malformed': false,
+  'index.requests.cache.enable': true,
+}
+const INDEX_MAPPINGS = {
+  _doc: chc.charity,
+}
 
-
-const createIndex = () => new Promise((resolve, reject) => {
-  esClient.indices.create({
-    index: INDEX,
-    body: {
-      settings: {
-        'index.mapping.coerce': true,
-        'index.mapping.ignore_malformed': false,
-        'index.requests.cache.enable': true,
-      },
-      mappings: {
-        _doc: chc.charity,
-      },
-    }
-  }, (err, res) => {
-    if (err) {
-      return reject(err)
-    }
-    return resolve(res)
-  })
-})
-
-const deleteIndex = () => new Promise((resolve, reject) => {
-  esClient.indices.delete({
-    index: INDEX,
-  }, (err, res) => {
-    if (err) {
-      log.error(`Failed to delete index '${INDEX}'`)
-      log.error(err)
-      return reject(err)
-    }
-    log.info(`Index deleted '${INDEX}'`)
-    log.info(res)
-    return resolve(res)
-  })
-})
-
-const esIndex = () => {
+async function esIndex() {
   let progressBar
 
-  return connectToDb(db, { useNewUrlParser: true })
-  .then(createIndex)
-  .then(() => {
-    progressBar = getProgressBar('Indexing charities')
-    progressBar.start(NUM_CHARITIES_ESTIMATE, 0)
-    return streamBatchPromise(
+  try {
+    await mongoose.connect(
+      `mongodb://${db.host}:${db.port}/${db.name}`,
+      { useNewUrlParser: true },
+    )
+    log.info(`Successfully connected to mongodb '${db.name}'`)
+
+    await esClient.indices.create({
+      index: INDEX,
+      body: {
+        settings: INDEX_SETTINGS,
+        mappings: INDEX_MAPPINGS,
+      }
+    })
+    log.info(`Successfully created index '${INDEX}'`)
+
+    progressBar = getProgressBar('Indexing documents')
+    progressBar.start(NUM_DOCS_ESTIMATE, 0)
+
+    const totalCount = await streamBatchPromise(
       Charity.find().cursor(),
       x => x.toJSON(),
       (parsedItems, counter) => {
@@ -65,20 +51,20 @@ const esIndex = () => {
       },
       { batchSize: 1000 },
     )
-  })
-  .then(counter => {
-    progressBar.update(NUM_CHARITIES_ESTIMATE)
+
+    progressBar.update(NUM_DOCS_ESTIMATE)
     progressBar.stop()
-    log.info(`Streamed through ${counter} charities`)
-    process.exit(0)
-  })
-  .catch(e => {
+    log.info(`Successfully indexed ${totalCount} documents`)
+
+    mongoose.disconnect()
+    log.info(`Successfully disconnected from mongodb '${db.name}'`)
+
+  } catch(e) {
+    log.error(`Failed to index '${INDEX}'`)
     log.error(e)
     process.exit(1)
-  })
+  }
+
 }
 
-module.exports = {
-  create: esIndex,
-  delete: deleteIndex,
-}
+module.exports = esIndex

@@ -1,4 +1,4 @@
 require('dotenv').config()
-const { charities } = require('./chc')
+const { createCharities } = require('./chc')
 
-charities.create()
+createCharities()
