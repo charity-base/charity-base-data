@@ -2,11 +2,15 @@
   "db": {
     "host": "localhost",
     "port": "27017",
-    "name": "charity-base"
+    "name": "charity-base-v5-0-0-feb-2019"
   },
   "elastic" : {
     "host": "https://charity-base.eu-west-2.es.amazonaws.com",
     "region": "eu-west-2",
-    "index": "charity-base"
+    "indices": {
+      "chc": {
+        "charities": "charity-base-dummy"
+      }
+    }
   }
 }
