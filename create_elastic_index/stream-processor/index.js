@@ -11,7 +11,7 @@ const bulkInsert = (parsedItems, client, _index) => {
         index: {
           _id,
           _index,
-          _type: 'charity',
+          _type: '_doc',
         },
       },
       charityWithoutId
@@ -26,7 +26,7 @@ const bulkInsert = (parsedItems, client, _index) => {
           return reject(err)
         }
         if (res.errors) {
-          const errItems = res.items.filter(x => x.index.error)
+          const errItems = res.items.filter(x => x.index.error).map(x => x.index.error)
           return reject(errItems)
         }
         return resolve(res)
