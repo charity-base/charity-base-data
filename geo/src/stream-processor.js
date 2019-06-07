@@ -12,7 +12,33 @@ const postcodeUrl = postcode => {
 
 const getGeo = postcode => {
   return fetchJSON(postcodeUrl(postcode))
-  .then(res => res.result || {})
+  .then(res => {
+    const geo = res.result || {}
+    if (geo && geo.longitude) return geo
+    // Assign rough location if in Channel Islands or Isle of Man:
+    if (postcode.substr(0,2) === 'GY') {
+      return {
+        ...geo,
+        latitude: 49.4555,
+        longitude: -2.5368,
+      }
+    }
+    if (postcode.substr(0,2) === 'JE') {
+      return {
+        ...geo,
+        latitude: 49.181,
+        longitude: -2.081,
+      }
+    }
+    if (postcode.substr(0,2) === 'IM') {
+      return {
+        ...geo,
+        latitude: 54.145,
+        longitude: -4.482,
+      }
+    }
+    return geo
+  })
   .catch(e => {
     // Swallow fetch errors
     return {}
