@@ -13,7 +13,6 @@ const parser = x => {
     fundingOrganization,
     recipientOrganization,
     beneficiaryLocation,
-    topicModelling,
   } = x._doc
 
   return {
@@ -31,7 +30,6 @@ const parser = x => {
         fundingOrganization,
         recipientOrganization,
         beneficiaryLocation,
-        topicModelling,
       } } },
     }
   }
@@ -41,7 +39,7 @@ const bulkPush = (parsedItems, Charity) => {
   return new Promise((resolve, reject) => {
     Charity.collection.bulkWrite(
       parsedItems,
-      { "ordered": true, w: 1 },
+      { "ordered": false, w: 1 },
       (err, response) => {
         if (err) {
           return reject(err)
