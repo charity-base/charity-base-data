@@ -72,7 +72,7 @@ const bulkWrite = (bulkOps, Charity) => {
   return new Promise((resolve, reject) => {
     Charity.collection.bulkWrite(
       bulkOps,
-      { "ordered": true, w: 1 },
+      { "ordered": false, w: 1 },
       (err, response) => {
         if (err) {
           return reject(err)
