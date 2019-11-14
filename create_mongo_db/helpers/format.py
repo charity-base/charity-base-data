@@ -1,3 +1,6 @@
+import string
+from urllib.parse import urlparse
+
 def stripped_or_none(v, case=None):
     if not isinstance(v, str):
         return None
@@ -9,7 +12,7 @@ def stripped_or_none(v, case=None):
         return v.strip().capitalize()
 
     if case == 'title':
-        return v.strip().title()
+        return string.capwords(v)
 
     if case == 'lower':
         return v.strip().lower()
@@ -37,3 +40,12 @@ def validate_coh_id(coh_id):
     if length >= 8:
         return coh_id
     return '0'*(8-length) + coh_id
+
+def clean_url(url):
+    stripped = stripped_or_none(url)
+    if not stripped:
+        return None
+
+    prefixed = urlparse(stripped, 'http').geturl()
+    # todo: strip all spaces out (maybe with w3lib)
+    return prefixed
