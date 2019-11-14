@@ -16,7 +16,7 @@ class ExtractAcctSubmit(Base):
     fyend = Column(String(4), nullable=True)
 
     def __repr__(self):
-      return "<ExtractAcctSubmit(regno='%d')>" % (self.regno)
+        return "<ExtractAcctSubmit(regno='%d')>" % (self.regno)
 
 
 class ExtractAooRef(Base):
@@ -32,7 +32,7 @@ class ExtractAooRef(Base):
     master = Column(Integer, nullable=True)
     
     def __repr__(self):
-      return "<ExtractAooRef(aooname='%s')>" % (self.aooname)
+        return "<ExtractAooRef(aooname='%s')>" % (self.aooname)
 
 class ExtractArSubmit(Base):
     __tablename__ = 'extract_ar_submit'
@@ -44,7 +44,7 @@ class ExtractArSubmit(Base):
     submit_date = Column(DateTime, nullable=True)
 
     def __repr__(self):
-      return "<ExtractArSubmit(regno='%d')>" % (self.regno)
+        return "<ExtractArSubmit(regno='%d')>" % (self.regno)
 
 
 class ExtractMainCharity(Base):
@@ -67,7 +67,7 @@ class ExtractMainCharity(Base):
     subs = relationship("ExtractCharity")
 
     def __repr__(self):
-      return "<ExtractMainCharity(regno='%d')>" % (self.regno)
+        return "<ExtractMainCharity(regno='%d')>" % (self.regno)
 
 
 class ExtractCharity(Base):
@@ -97,7 +97,7 @@ class ExtractCharity(Base):
     fax = Column(Integer, nullable=True)
     
     def __repr__(self):
-      return "<ExtractCharity(regno='%d', subno='%d')>" % (self.regno, self.subno)
+        return "<ExtractCharity(regno='%d', subno='%d')>" % (self.regno, self.subno)
 
 
 
@@ -114,7 +114,7 @@ class ExtractCharityAoo(Base):
     master = Column(Integer, nullable=True)
 
     def __repr__(self):
-      return "<ExtractCharityAoo(regno='%d')>" % (self.regno)
+        return "<ExtractCharityAoo(regno='%d')>" % (self.regno)
 
 
 class ExtractClass(Base):
@@ -127,7 +127,7 @@ class ExtractClass(Base):
     classno = Column(String(10), nullable=False)
 
     def __repr__(self):
-      return "<ExtractClass(regno='%d')>" % (self.regno)
+        return "<ExtractClass(regno='%d')>" % (self.regno)
 
 
 class ExtractClassRef(Base):
@@ -139,7 +139,7 @@ class ExtractClassRef(Base):
     classtext = Column(String(65), nullable=True)
 
     def __repr__(self):
-      return "<ExtractClassRef(classno='%s')>" % (self.classno)
+        return "<ExtractClassRef(classno='%s')>" % (self.classno)
 
 
 class ExtractFinancial(Base):
@@ -154,7 +154,7 @@ class ExtractFinancial(Base):
     expend = Column(Numeric(12, 0), nullable=True)
 
     def __repr__(self):
-      return "<ExtractFinancial(regno='%d', fyend='%s')>" % (self.regno, self.fyend)
+        return "<ExtractFinancial(regno='%d', fyend='%s')>" % (self.regno, self.fyend)
 
 
 class ExtractName(Base):
@@ -168,7 +168,7 @@ class ExtractName(Base):
     name = Column(String(255), nullable=True)
 
     def __repr__(self):
-      return "<ExtractName(regno='%d', subno='%d', nameno='%d')>" % (self.regno, self.subno, self.nameno)
+        return "<ExtractName(regno='%d', subno='%d', nameno='%d')>" % (self.regno, self.subno, self.nameno)
 
 
 class ExtractObjects(Base):
@@ -183,7 +183,7 @@ class ExtractObjects(Base):
     objective = Column(String(10000), nullable=True)
 
     def __repr__(self):
-      return "<ExtractObjects(regno='%d', subno='%d', seqno='%s')>" % (self.regno, self.subno, self.seqno)
+        return "<ExtractObjects(regno='%d', subno='%d', seqno='%s')>" % (self.regno, self.subno, self.seqno)
 
 
 class ExtractPartB(Base):
@@ -238,7 +238,7 @@ class ExtractPartB(Base):
     charity_acc = Column(String(255), nullable=True)
 
     def __repr__(self):
-      return "<ExtractPartB(regno='%d', fyend='%s')>" % (self.regno, self.fyend)
+        return "<ExtractPartB(regno='%d', fyend='%s')>" % (self.regno, self.fyend)
 
 
 class ExtractRegistration(Base):
@@ -253,7 +253,7 @@ class ExtractRegistration(Base):
     remcode = Column(String(3), nullable=True)
 
     def __repr__(self):
-      return "<ExtractRegistration(regno='%d', subno='%d', regdate='%s')>" % (self.regno, self.subno, self.regdate)
+        return "<ExtractRegistration(regno='%d', subno='%d', regdate='%s')>" % (self.regno, self.subno, self.regdate)
 
 
 class ExtractRemoveRef(Base):
@@ -265,7 +265,7 @@ class ExtractRemoveRef(Base):
     text = Column(String(25), nullable=True)
 
     def __repr__(self):
-      return "<ExtractRemoveRef(code='%s')>" % (self.code)
+        return "<ExtractRemoveRef(code='%s')>" % (self.code)
 
 
 class ExtractTrustee(Base):
@@ -277,7 +277,24 @@ class ExtractTrustee(Base):
     trustee = Column(String(255), nullable=True)
 
     def __repr__(self):
-      return "<ExtractTrustee(regno='%d', trustee='%s')>" % (self.regno, self.trustee)
+        return "<ExtractTrustee(regno='%d', trustee='%s')>" % (self.regno, self.trustee)
+
+
+class ExtractSIR(Base):
+    __tablename__ = 'sir_data'
+
+    id = Column(Integer, primary_key=True)
+
+    regno = Column(Integer, nullable=True)
+    charity_name = Column(String(255), nullable=True)
+    sir_number = Column(String(10), nullable=True) # change to shorter string
+    q_number = Column(Integer, nullable=True)
+    question = Column(String(255), nullable=True) # change to shorter string
+    sub_question = Column(String(100), nullable=True) # change to shorter string
+    answer = Column(String(1000), nullable=True) # change to shorter string
+
+    def __repr__(self):
+        return "<ExtractSIR(id='%d')>" % (self.id)
 
 
 models = [
@@ -296,4 +313,5 @@ models = [
   ExtractRegistration,
   ExtractRemoveRef,
   ExtractTrustee,
+  ExtractSIR,
 ]
