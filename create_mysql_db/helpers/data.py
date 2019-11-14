@@ -8,7 +8,7 @@ def load_data_sql(file_path, file_header, table_name):
     
     return text("""
         LOAD DATA INFILE '%s'
-        INTO TABLE %s
+        IGNORE INTO TABLE %s
         CHARACTER SET latin1
         FIELDS TERMINATED BY '@**@' ESCAPED BY ''
         LINES TERMINATED BY '*@@*'
