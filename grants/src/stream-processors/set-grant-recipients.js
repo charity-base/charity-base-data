@@ -25,7 +25,7 @@ const setCharityNumber = (parsedItems, Grant) => {
           update: { $set: { 'recipientOrganization.0.GB-CHC': getCharityNumber(recipientOrganization) } },
         }
       })),
-      { "ordered": true, w: 1 },
+      { "ordered": false, w: 1 },
       (err, response) => {
         if (err) {
           return reject(err)

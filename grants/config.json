@@ -1,21 +1,8 @@
 {
-  "grantNavJSON" : "/path/to/grantnav-20180919142159.json",
+  "grantNavJSON" : "/Users/dan/Documents/Repositories/charity-base-data/git_ignore/data/grantnav-20191114124733.json",
   "db": {
     "host": "localhost",
     "port": "27017",
-    "name": "charity-base"
-  },
-  "classification": {
-    "mallet": "/path/to/mallet-2.0.8/bin/mallet",
-    "inputDir": "./data",
-    "importOpts": {
-      "malletDataFile": "./mallet/data.mallet",
-      "stopFile": "./mallet/stoplist.txt"
-    },
-    "trainOpts": {
-      "topicKeysFile": "./mallet/topics.tsv",
-      "docTopicsFile": "./mallet/doc_topics.tsv",
-      "numTopics": 15
-    }
+    "name": "charity-base-v6-4-0-nov-2019"
   }
 }
