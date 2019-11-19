@@ -1,4 +1,5 @@
 const ILLEGAL_HANDLES = [
+  'home',
   'login',
   'search',
   'intent',
@@ -10,6 +11,11 @@ const ILLEGAL_HANDLES = [
 ]
 
 const twitterHandle = url => {
+  const screenName = url.split('screen_name=')[1]
+  if (screenName) {
+    return screenName.split('&')[0]
+  }
+
   const path = url.split('?')[0].split('#')[0].split('twitter.com/')[1]
   if (!path) return null
 

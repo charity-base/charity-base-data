@@ -7,10 +7,10 @@ const ILLEGAL_HANDLES = [
   'stylemixed',
   'xyz',
   'skynews',
-  'pages', // fb
-  'sharer', // fb
-  'groups', // fb
-  'watch', // fb
+  'pages',
+  'sharer',
+  'groups',
+  'watch',
 ]
 
 const facebookHandle = url => {

@@ -1,6 +1,6 @@
 const { getProgressBar, log } = require('./log')
 const { connectToDb, Charity } = require('./db')
-const { facebookHandle, twitterHandle } = require('./parse')
+const { facebookHandle, twitterHandle, sortHandles } = require('./parse')
 
 module.exports = {
   getProgressBar,
@@ -9,4 +9,5 @@ module.exports = {
   Charity,
   facebookHandle,
   twitterHandle,
+  sortHandles,
 }
