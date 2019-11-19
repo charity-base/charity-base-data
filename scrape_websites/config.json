@@ -3,5 +3,6 @@
     "host": "localhost",
     "port": "27017",
     "name": "charity-base-v6-4-0-nov-2019"
-  }
+  },
+  "timeout": 5000
 }

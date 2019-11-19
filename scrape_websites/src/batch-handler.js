@@ -1,131 +1,65 @@
-const mongoose = require('mongoose')
-const { log } = require('./helpers')
-const scrape = require('./scrape')
-const levenshtein = require('js-levenshtein')
-const { facebookHandle, twitterHandle } = require('./helpers')
+// const http = require('http')
+const https = require('https')
+const axios = require('axios')
+const cheerio = require('cheerio')
+const { facebookHandle, twitterHandle, sortHandles } = require('./helpers')
+const { timeout } = require('../config.json')
 
-const SOCIAL_DOMAINS = [
-  'twitter.com', // should also deal with t.co and twitter.co.uk?
-  'facebook.com',
-  'youtube.com',
-  'instagram.com',
-  'linkedin.com',
-  'plus.google.com',
-  'flickr.com'
-]
-
-const ILLEGAL_HANDLES = [
-  'login',
-  'search',
-  'intent',
-  'share',
-  'wix',
-  'stylemixed',
-  'xyz',
-  'skynews',
-  'pages', // fb
-  'sharer', // fb
-  'groups', // fb
-  'watch', // fb
-]
-
-const cleanUrl = (url) => {
-  if (!url) return null
-  const clean = url.trim() //.toLowerCase()
-  if (!clean) return null
-  if (clean.indexOf('http://') === 0) return clean
-  if (clean.indexOf('https://') === 0) return clean
-  return 'http://' + clean
+const axiosOptions = {
+  timeout,
+  // httpAgent: new http.Agent({ keepAlive: true }),
+  httpsAgent: new https.Agent({ keepAlive: true }),
+  responseType: 'text',
 }
 
-const parsePage = async page => {
-  await page.waitForSelector('a', { timeout: 3000 })
-  hrefs = await page.$$eval('a', els => els.map(el => el.getAttribute('href')));
-  return {
-    hrefs,
-  }
-}
-
-const unleak = x => (' ' + x).substr(1)
-
-const scrapeOne = ({ _id, website }) => {
-  const url = cleanUrl(website)
-  if (!url) return { _id, socialHandles: [] }
-  return scrape(url, parsePage)
-  .then(payload => {
-    if (!payload) return { _id, socialHandles: [] }
-    const { hrefs } = payload
-    if (!hrefs) return { _id, socialHandles: [] }
-    // const $ = cheerio.load(html)
-    const links = []
-    hrefs.forEach(href => {
-      links.push(...SOCIAL_DOMAINS.reduce((agg, x) => {
-        if (href && href.indexOf(x) > -1) return [...agg, unleak(href)]
-        return agg
-      }, []))
-    })
-    const twitter = {}
-    const facebook = {}
-    links.forEach(function(s) {
-      const fbUser = facebookHandle(s)
-      const twitterUser = twitterHandle(s)
-      if (fbUser) {
-        facebook[fbUser] = facebook[fbUser] ? (facebook[fbUser] + 1) : 1
-      }
-      if (twitterUser) {
-        twitter[twitterUser] = twitter[twitterUser] ? (twitter[twitterUser] + 1) : 1
-      }
-    })
-    const twitterHandles = Object.keys(twitter).map(x => ({ user: x, count: twitter[x] })).sort((a, b) => {
-      const countDiff = b.count - a.count
-      if (countDiff !== 0) return countDiff
-      return levenshtein(url, a.user) - levenshtein(url, b.user)
-    })
-    const facebookHandles = Object.keys(facebook).map(x => ({ user: x, count: facebook[x] })).sort((a, b) => {
-      const countDiff = b.count - a.count
-      if (countDiff !== 0) return countDiff
-      return levenshtein(url, a.user) - levenshtein(url, b.user)
-    })
-
-    const socialHandles = []
-    if (twitterHandles[0]) {
-      socialHandles.push({
-        platform: 'twitter',
-        handle: twitterHandles[0].user,
-      })
+const scrapeOne = ({ id, website }) => {
+  return axios.get(website, axiosOptions)
+  .then(res => {
+    const $ = cheerio.load(res.data)
+    const handles = {
+      facebook: {},
+      twitter: {},
     }
-    if (facebookHandles[0]) {
-      socialHandles.push({
-        platform: 'facebook',
-        handle: facebookHandles[0].user,
-      })
+    $('a[href*="facebook.com"]').each(function(i, val) {
+      const handle = facebookHandle(val.attribs.href)
+      if (!handle) return
+      handles['facebook'][handle] = 1 + (handles['facebook'][handle] || 0)
+    })
+    $('a[href*="twitter.com"]').each(function(i, val) {
+      const handle = twitterHandle(val.attribs.href)
+      if (!handle) return
+      handles['twitter'][handle] = 1 + (handles['twitter'][handle] || 0)
+    })
+
+    const facebookArr = Object.keys(handles.facebook).map(x => ({ user: x, count: handles.facebook[x] }))
+    const twitterArr = Object.keys(handles.twitter).map(x => ({ user: x, count: handles.twitter[x] }))
+
+    const fb = sortHandles(facebookArr, website)[0]
+    const tw = sortHandles(twitterArr, website)[0]
+    const social = []
+    if (tw) {
+      social.push({ platform: 'twitter', handle: tw.user })
+    }
+    if (fb) {
+      social.push({ platform: 'facebook', handle: fb.user })
     }
 
-    return {
-      _id,
-      socialHandles,
-    }
+    return social
   })
   .catch(e => {
-    // log.error(e)
+    // console.log(e)
     // Swallow errors
-    return {}
+    return []
   })
 }
 
-const scrapeItems = items => {
-  return Promise.all(items.map(scrapeOne))
-}
-
-const updateOne = ({ _id, socialHandles }) => {
-  if (!socialHandles || !socialHandles.length) return
+const updateOne = ({ id, social }) => {
   return {
     updateOne: {
-      filter: { _id: mongoose.Types.ObjectId(_id) },
+      filter: { 'ids.GB-CHC': id },
       update: {
         $set: {
-          // social,
-          'contact.social': socialHandles,
+          'contact.social': social,
         },
       },
     },
@@ -148,10 +82,12 @@ const bulkWrite = (bulkOps, Charity) => {
 }
 
 const batchHandler = (parsedItems, Charity) => {
-  return scrapeItems(parsedItems)
+  return Promise.all(parsedItems.map(scrapeOne))
   .then(items => {
-    const ops = items.map(updateOne).filter(x => x)
-    if (ops.length === 0) return
+    const ops = items.map((social, i) => {
+      const id = parsedItems[i].id
+      return updateOne({ id, social })
+    })
     return bulkWrite(ops, Charity)
   })
 }

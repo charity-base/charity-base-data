@@ -5,7 +5,7 @@ const log = bunyan.createLogger({
   name: 'main',
   streams: [
     {
-      level: 'info',
+      level: 'debug',
       stream: process.stdout
     },
     // {
