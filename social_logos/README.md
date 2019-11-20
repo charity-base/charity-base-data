@@ -8,6 +8,7 @@ yarn
 
 ## Instructions
 
+* `cp .env.example .env` and fill in missing values
 * Update db & s3 creds in [config.json](./config.json)
 * `yarn start`
 
