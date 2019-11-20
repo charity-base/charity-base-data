@@ -10,9 +10,18 @@ const QUERY = {
   'contact.social.0': { '$exists': false },
 }
 
+const SORT = {
+  _id: -1
+}
+
 const parser = x => ({
   'id': x._doc.ids['GB-CHC'],
   'website': x._doc.website,
+})
+
+process.on('uncaughtException', (error) => {
+  console.log('uncaughtException!')
+  console.log(error)
 })
 
 const scrape = () => {
@@ -23,7 +32,7 @@ const scrape = () => {
     progressBar = getProgressBar('Scraping charity website')
     progressBar.start(NUM_CHARITIES_ESTIMATE, 0)
     return streamBatchPromise(
-      Charity.find(QUERY).cursor(),
+      Charity.find(QUERY).sort(SORT).cursor(),
       parser,
       (parsedItems, counter) => {
         progressBar.update.bind(progressBar)(counter)
@@ -42,7 +51,6 @@ const scrape = () => {
     log.error(e)
     process.exit(1)
   })
-
 }
 
 scrape()
