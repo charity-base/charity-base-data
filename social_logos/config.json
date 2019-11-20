@@ -1,0 +1,12 @@
+{
+  "db": {
+    "host": "localhost",
+    "port": "27017",
+    "name": "charity-base-v6-4-0-nov-2019"
+  },
+  "s3": {
+    "region": "eu-west-2",
+    "bucket": "charity-base-uk-images",
+    "path": "logos/chc/2019_Nov"
+  }
+}
