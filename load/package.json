@@ -1,0 +1,17 @@
+{
+  "name": "charity-base-cc-load",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "load": "node index.js | bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "dotenv": "^8.2.0",
+    "mysql": "^2.18.1"
+  }
+}
