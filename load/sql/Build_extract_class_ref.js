@@ -1,4 +1,4 @@
-const TABLE_NAME = 'extract_class_ref'
+const TABLE_NAME = 'cc_extract_class_ref'
 
 const createTable = dbName => {
   const sql = `

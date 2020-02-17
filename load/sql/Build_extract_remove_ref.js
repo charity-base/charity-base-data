@@ -1,4 +1,4 @@
-const TABLE_NAME = 'extract_remove_ref'
+const TABLE_NAME = 'cc_extract_remove_ref'
 
 const createTable = dbName => {
   const sql = `

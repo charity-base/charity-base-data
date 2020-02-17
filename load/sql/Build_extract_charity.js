@@ -1,4 +1,4 @@
-const TABLE_NAME = 'extract_charity'
+const TABLE_NAME = 'cc_extract_charity'
 
 const createTable = dbName => {
   const sql = `
@@ -24,8 +24,8 @@ const createTable = dbName => {
     );
   `
   return {
-  	tableName: TABLE_NAME,
-  	sql,
+    tableName: TABLE_NAME,
+    sql,
   }
 }
 

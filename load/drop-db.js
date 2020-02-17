@@ -31,13 +31,14 @@ const f = () => {
     try {
       if (answer && answer.toLowerCase() === 'y') {
         log.info(`Dropping database '${dbName}'`)
-        return await dropDatabase(connection, dbName)
+        await dropDatabase(connection, dbName)
+      } else {
+        log.info('Exiting down without dropping database')
       }
     } catch(e) {
       log.error(e.message)
-      rl.close()
     }
-    log.info('Exiting down without dropping database')
+    connection.end()
     rl.close()
   })
 }
