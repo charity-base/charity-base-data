@@ -13,6 +13,15 @@ This script imports the Charity Commission's .bcp files into a MySQL database.  
 - `yarn`
 - `cp .env-example .env` and update the variables in `.env` if necessary
 
+## Creating database
+
+- `yarn create-db`
+
+
 ## Importing data
 
-- `yarn import`
+- `yarn import-data`
+
+## Dropping database
+
+- `yarn drop-db`

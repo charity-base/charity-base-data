@@ -1,10 +1,12 @@
 {
-  "name": "charity-base-cc-load",
+  "name": "charity-base-cc-import",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "load": "node index.js | bunyan",
+    "create-db": "node create-db.js | bunyan",
+    "drop-db": "node drop-db.js",
+    "import-data": "node import-data.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
