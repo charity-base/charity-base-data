@@ -3,30 +3,6 @@ const log = require('./lib/logger')
 const connection = require('./lib/db')
 const createTableQueries = require('./sql')
 
-const createDatabase = (conn, dbName) => {
-  return new Promise((resolve, reject) => {
-    conn.query(`CREATE DATABASE ${dbName}`, err => {
-      if (err) {
-        log.error(`Failed to create database '${dbName}'`)
-        reject(err)
-      }
-      resolve(dbName)
-    })
-  })
-}
-
-const dropDatabase = (conn, dbName) => {
-  return new Promise((resolve, reject) => {
-    conn.query(`DROP DATABASE ${dbName}`, err => {
-      if (err) {
-        log.error(`Failed to drop database '${dbName}'`)
-        reject(err)
-      }
-      resolve(dbName)
-    })
-  })
-}
-
 const runSQL = (conn, sql) => {
   return new Promise((resolve, reject) => {
     const query = conn.query(sql, err => {
@@ -36,6 +12,11 @@ const runSQL = (conn, sql) => {
       resolve(query.sql)
     })
   })
+}
+
+const createDatabase = (conn, dbName) => {
+  log.info(`Creating database '${process.env.DB_NAME}'`)
+  return runSQL(conn, `CREATE DATABASE ${dbName}`)
 }
 
 const createTables = async (conn, dbName) => {
@@ -49,7 +30,6 @@ const createTables = async (conn, dbName) => {
 const f = async () => {
   try {
     await createDatabase(connection, process.env.DB_NAME)
-    log.info(`Created database '${process.env.DB_NAME}'`)
   } catch(e) {
     log.error(e.message)
     process.exit(0)
