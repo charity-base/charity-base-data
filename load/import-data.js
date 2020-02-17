@@ -28,6 +28,10 @@ const importBCP = (conn, dbName, tableName, filePath) => {
   return runSQL(conn, sql)
 }
 
+const tableName = fileName => {
+  return `cc_${fileName.split('.')[0]}`
+}
+
 const importData = async (conn, dbName, bcpDir) => {
   return new Promise((resolve, reject) => {
     fs.readdir(bcpDir, async (err, files) => {
@@ -35,13 +39,13 @@ const importData = async (conn, dbName, bcpDir) => {
         reject(err)
       }
       for (let index = 0; index < files.length; index++) {
-        log.info(`Importing data from '${files[index]}'`)
-        const tableName = files[index].split('.')[0]
+        const fileName = files[index]
+        log.info(`Importing data from '${fileName}'`)
         await importBCP(
           conn,
           dbName,
-          tableName,
-          `${bcpDir}/${tableName}.bcp`
+          tableName(fileName),
+          `${bcpDir}/${fileName}`
         )
       }
       resolve()

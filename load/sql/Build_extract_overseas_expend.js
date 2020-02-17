@@ -1,4 +1,4 @@
-const TABLE_NAME = 'extract_overseas_expend'
+const TABLE_NAME = 'cc_extract_overseas_expend'
 
 const createTable = dbName => {
   const sql = `
