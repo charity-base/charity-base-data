@@ -1,0 +1,21 @@
+{
+  "name": "charity-base-data-import-postcode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "import-postcode-geos": "node index.js | bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "cli-progress": "^3.6.0",
+    "dotenv": "^8.2.0",
+    "knex": "^0.20.10",
+    "mysql2": "^2.1.0",
+    "node-fetch": "^2.6.0",
+    "stream-batch-promise": "^1.2.2"
+  }
+}
