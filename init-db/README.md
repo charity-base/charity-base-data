@@ -19,6 +19,14 @@ This script creates the CharityBase relational database with empty tables.
 
 - `yarn create-db`
 
+Estimated runtime: 1 second
+
+### Creating tables
+
+- `yarn knex migrate:latest`
+
+Estimated runtime: 3 seconds
+
 ### Dropping database
 
 - `yarn drop-db`
