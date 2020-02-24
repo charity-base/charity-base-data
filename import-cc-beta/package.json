@@ -13,9 +13,11 @@
     "bunyan": "^1.8.12",
     "charity-base-schema": "github:charity-base/charity-base-schema#v2.8.4",
     "cheerio": "^1.0.0-rc.3",
-    "cli-progress": "^2.1.0",
+    "cli-progress": "^3.6.0",
+    "knex": "^0.20.10",
     "mongoose": "^5.2.16",
-    "node-fetch": "^2.2.0",
-    "stream-batch-promise": "^1.1.1"
+    "mysql2": "^2.1.0",
+    "node-fetch": "^2.6.0",
+    "stream-batch-promise": "^1.2.2"
   }
 }
