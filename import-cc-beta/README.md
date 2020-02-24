@@ -1,15 +1,20 @@
-# charity-base-data/scrape_beta
+# CharityBase Data
 
-## Install Dependencies
+## Scraping Data from CC Beta Website
 
-```
-yarn
-```
+### Requirements
 
-## Instructions
+- [MySQL v8+](https://www.mysql.com)
+- [Node v10+](https://nodejs.org)
+- [Yarn](https://yarnpkg.com)
 
-* Update db creds in [config.json](./config.json)
-* `yarn start`
+### Installing
 
-## Next Steps
-[charity-base-data/geo](../geo)
+- `yarn`
+- `cp .env-example .env` and update the variables in `.env` if necessary
+
+### Importing Data
+
+- `yarn import-cc-beta`
+
+Estimated runtime: 3 hours
