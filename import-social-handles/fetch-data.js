@@ -6,6 +6,8 @@ const {
   twitterHandle,
   sortHandles,
 } = require('./lib/handles')
+const { TimeoutError } = require('./lib/errors')
+const timebox = require('./lib/timebox')
 
 const getCleanUrl = url => {
   if (!url) {
@@ -59,25 +61,20 @@ const scrape = async ({ id, url }) => {
   }
 }
 
-const timebox = (promise, name, shouldReject=false, ms=5000) => {
+const fetchData = ({ id, url }) => {
   return new Promise(async (resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const msg = `Promise '${name}' timed out after ${ms}ms`
-      // log.error(msg)
-      shouldReject ? reject(new Error(msg)) : resolve(null)
-    }, ms)
     try {
-      const res = await promise
-      clearTimeout(timeout)
+      const res = await timebox(scrape(({ id, url })))
       resolve(res)
-    }
-    catch(e) {
-      clearTimeout(timeout)
-      reject(e)
+    } catch (e) {
+      if (e instanceof TimeoutError) {
+        // log.error('Scraping timed out')
+        resolve(null)
+      } else {
+        reject(e)
+      }
     }
   })
 }
-
-const fetchData = ({ id, url }) => timebox(scrape(({ id, url })), 'scrape beta')
 
 module.exports = fetchData

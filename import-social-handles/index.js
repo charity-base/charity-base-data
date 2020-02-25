@@ -2,6 +2,8 @@ require('dotenv').config()
 const streamBatchPromise = require('stream-batch-promise')
 const getProgressBar = require('./lib/progress')
 const log = require('./lib/logger')
+const timebox = require('./lib/timebox')
+const { TimeoutError } = require('./lib/errors')
 const fetchData = require('./fetch-data')
 
 const {
@@ -28,41 +30,47 @@ const knex = require('knex')({
 const PROGRESS_BAR = getProgressBar('Progress')
 
 const update = arr => {
-  return new Promise((resolve, reject) => {
-    knex.transaction(trx => {
-      const updateQueries = arr
-        .filter(x => x.url !== x.cleanUrl)
-        .map(({
-          id,
-          url,
-          cleanUrl,
-          twitter,
-          facebook,
-        }) => (
-          knex(TABLE_MAIN_CHARITY)
-            .where('regno', '=', id)
-            .update({ web: cleanUrl })
-            .transacting(trx)
-        ))
-      const insertQueries = arr
-        .filter(({ twitter, facebook }) => twitter || facebook)
-        .map(({ id, twitter, facebook }) => (
-          knex(TABLE_SOCIAL)
-            .insert({
-              regno: id,
-              twitter,
-              facebook,
-            })
-            .transacting(trx)
-        ))
-        return Promise.all([...updateQueries, ...insertQueries])
-          .then(trx.commit)    
-          .catch(trx.rollback)
+  return knex.transaction(trx => {
+    const updateQueries = arr
+      .filter(x => x.url !== x.cleanUrl)
+      .map(({
+        id,
+        url,
+        cleanUrl,
+        twitter,
+        facebook,
+      }) => (
+        knex(TABLE_MAIN_CHARITY)
+          .where('regno', '=', id)
+          .update({ web: cleanUrl })
+          .transacting(trx)
+      ))
+    const insertQueries = arr
+      .filter(({ twitter, facebook }) => twitter || facebook)
+      .map(({ id, twitter, facebook }) => (
+        knex(TABLE_SOCIAL)
+          .insert({
+            regno: id,
+            twitter,
+            facebook,
+          })
+          .transacting(trx)
+      ))
+    return new Promise(async (resolve, reject) => {
+      try {
+        await timebox(Promise.all([...updateQueries, ...insertQueries]))
+        await trx.commit()
+        resolve()
+      } catch (e) {
+        await trx.rollback()
+        if (e instanceof TimeoutError) {
+          log.error('Update operation timed out: ', e.message)
+          resolve()
+        } else {
+          reject(e)
+        }
+      }
     })
-    .then(updates => {
-      resolve()
-    })
-    .catch(reject)
   })
 }
 
@@ -100,6 +108,7 @@ const f = async () => {
       )
       .from(TABLE_MAIN_CHARITY)
       .leftJoin(TABLE_SOCIAL, `${TABLE_MAIN_CHARITY}.regno`, '=', `${TABLE_SOCIAL}.regno`)
+      .orderBy(`${TABLE_MAIN_CHARITY}.regno`, 'desc')
       .where({
         [`${TABLE_SOCIAL}.twitter`]: null,
         [`${TABLE_SOCIAL}.facebook`]: null,
