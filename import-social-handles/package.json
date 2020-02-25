@@ -1,0 +1,23 @@
+{
+  "name": "charity-base-data-import-social-handles",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./index.js",
+  "scripts": {
+    "import-social-handles": "node index.js | bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "cheerio": "^1.0.0-rc.3",
+    "cli-progress": "^3.6.0",
+    "dotenv": "^8.2.0",
+    "js-levenshtein": "^1.1.6",
+    "knex": "^0.20.10",
+    "mysql2": "^2.1.0",
+    "node-fetch": "^2.6.0",
+    "stream-batch-promise": "^1.2.2"
+  }
+}
