@@ -5,6 +5,7 @@ const log = require('./lib/logger')
 const timebox = require('./lib/timebox')
 const { TimeoutError } = require('./lib/errors')
 const fetchData = require('./fetch-data')
+const memwatch = require('@airbnb/node-memwatch')
 
 const {
   BATCH_SIZE,
@@ -12,6 +13,7 @@ const {
   DB_USER,
   DB_PASSWORD,
   DB_NAME,
+  OFFSET,
   TABLE_MAIN_CHARITY,
   TABLE_SOCIAL,
 } = process.env
@@ -29,8 +31,20 @@ const knex = require('knex')({
 
 const PROGRESS_BAR = getProgressBar('Progress')
 
-const update = arr => {
-  return knex.transaction(trx => {
+let hd = new memwatch.HeapDiff()
+let heapDiff
+memwatch.on('stats', function(stats) {
+  heapDiff = hd.end()
+  hd = new memwatch.HeapDiff()
+})
+process.on('exit', (code) => {
+  log.info(`About to exit with code: ${code}`)
+  log.info('Heap diff:')
+  log.info(JSON.stringify(heapDiff, null, 2))
+})
+
+const update = async arr => {
+  const transaction = knex.transaction(trx => {
     const updateQueries = arr
       .filter(x => x.url !== x.cleanUrl)
       .map(({
@@ -56,22 +70,20 @@ const update = arr => {
           })
           .transacting(trx)
       ))
-    return new Promise(async (resolve, reject) => {
-      try {
-        await timebox(Promise.all([...updateQueries, ...insertQueries]))
-        await trx.commit()
-        resolve()
-      } catch (e) {
-        await trx.rollback()
-        if (e instanceof TimeoutError) {
-          log.error('Update operation timed out: ', e.message)
-          resolve()
-        } else {
-          reject(e)
-        }
-      }
-    })
+    return Promise.all([...updateQueries, ...insertQueries])
+      .then(trx.commit)
+      .catch(trx.rollback)
   })
+  try {
+    await timebox(transaction)
+  } catch (e) {
+    if (e instanceof TimeoutError) {
+      log.error('Update operation timed out: ', e.message)
+      return null
+    } else {
+      throw e
+    }
+  }
 }
 
 const batchHandler = (items, counter) => {
@@ -99,7 +111,7 @@ const f = async () => {
 
     const { numCharities } = (await countQuery)[0]
 
-    PROGRESS_BAR.start(numCharities, 0)
+    PROGRESS_BAR.start(numCharities - OFFSET, 0)
 
     const charitiesToUpdate = knex
       .select(
@@ -108,7 +120,8 @@ const f = async () => {
       )
       .from(TABLE_MAIN_CHARITY)
       .leftJoin(TABLE_SOCIAL, `${TABLE_MAIN_CHARITY}.regno`, '=', `${TABLE_SOCIAL}.regno`)
-      .orderBy(`${TABLE_MAIN_CHARITY}.regno`, 'desc')
+      .orderBy(`${TABLE_MAIN_CHARITY}.regno`, 'asc')
+      .offset(OFFSET)
       .where({
         [`${TABLE_SOCIAL}.twitter`]: null,
         [`${TABLE_SOCIAL}.facebook`]: null,
