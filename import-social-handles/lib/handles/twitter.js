@@ -4,10 +4,15 @@ const ILLEGAL_HANDLES = [
   'search',
   'intent',
   'share',
-  'wix',
   'stylemixed',
   'xyz',
   'skynews',
+  // website builders:
+  'wix',
+  'hover',
+  'webs',
+  'wordpress',
+  'onecom',
 ]
 const MAX_LENGTH = 15
 
@@ -39,7 +44,7 @@ const twitterHandle = url => {
   if (!x) return null
   const stripped = x.charAt(0) === '@' ? x.slice(1) : x
   const handle = stripped && stripped.match(/^[A-Za-z0-9_]{1,15}$/) ? stripped : null
-  return ILLEGAL_HANDLES.indexOf(handle) === -1 ? handle : null
+  return ILLEGAL_HANDLES.indexOf(handle.toLowerCase()) === -1 ? handle : null
 }
 
 module.exports = twitterHandle
