@@ -1,7 +1,4 @@
-const bunyan = require('bunyan')
 const progress = require('cli-progress')
-
-const log = bunyan.createLogger({ name: 'main' })
 
 const getProgressBar = message => {
   return new progress.Bar({
@@ -9,7 +6,4 @@ const getProgressBar = message => {
   }, progress.Presets.shades_classic)
 }
 
-module.exports = {
-  log,
-  getProgressBar,
-}
+module.exports = getProgressBar
