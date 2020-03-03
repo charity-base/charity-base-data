@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+const axios = require('axios')
 const cheerio = require('cheerio')
 const log = require('./lib/logger')
 const {
@@ -6,8 +6,27 @@ const {
   twitterHandle,
   sortHandles,
 } = require('./lib/handles')
-const { TimeoutError } = require('./lib/errors')
-const timebox = require('./lib/timebox')
+
+const REQUEST_TIMEOUT = parseInt(process.env.REQUEST_TIMEOUT)
+
+// We implement timeout cancelling manually since the `timeout` option seems to be unreliable
+// https://github.com/axios/axios/issues/647
+const axiosGet = (url, options = {}) => {
+  const abort = axios.CancelToken.source()
+  const id = setTimeout(() => {
+    abort.cancel(`Timeout of ${REQUEST_TIMEOUT}ms.`)
+  }, REQUEST_TIMEOUT)
+  return axios
+    .get(url, { cancelToken: abort.token, ...options })
+    .then(response => {
+      clearTimeout(id)
+      return response
+    })
+    .catch(e => {
+      clearTimeout(id)
+      throw e
+    })
+}
 
 const getCleanUrl = url => {
   if (!url) {
@@ -23,8 +42,10 @@ const scrape = async ({ id, url }) => {
     if (!cleanUrl) {
       throw 'No valid url'
     }
-    const res = await fetch(cleanUrl)
-    const html = await res.text()
+    const res = await axiosGet(cleanUrl, {
+      // timeout: REQUEST_TIMEOUT,
+    })
+    const html = res.data
     const $ = cheerio.load(html)
 
     const handles = {
@@ -57,24 +78,9 @@ const scrape = async ({ id, url }) => {
     }
   } catch(e) {
     // log.error(e)
+    // if (e.code === 'ECONNABORTED')
     return null
   }
 }
 
-const fetchData = ({ id, url }) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const res = await timebox(scrape(({ id, url })))
-      resolve(res)
-    } catch (e) {
-      if (e instanceof TimeoutError) {
-        // log.error('Scraping timed out')
-        resolve(null)
-      } else {
-        reject(e)
-      }
-    }
-  })
-}
-
-module.exports = fetchData
+module.exports = scrape
