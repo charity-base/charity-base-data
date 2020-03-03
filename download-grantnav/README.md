@@ -14,7 +14,7 @@ This script downloads data from https://grantnav.threesixtygiving.org/developers
 - `yarn`
 - `cp .env-example .env` and update the variables in `.env` if necessary
 
-### Downloading & Unzipping CC data
+### Downloading GrantNav Data
 
 - `yarn download-grantnav`
 
