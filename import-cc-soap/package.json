@@ -1,0 +1,22 @@
+{
+  "name": "charity-base-data-import-cc-soap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "import-cc-soap": "node index.js | bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "cli-progress": "^3.6.0",
+    "dotenv": "^8.2.0",
+    "knex": "^0.20.11",
+    "mysql2": "^2.1.0",
+    "soap": "^0.31.0",
+    "stream-batch-promise": "^1.2.2",
+    "tiny-async-pool": "^1.1.0"
+  }
+}
