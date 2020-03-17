@@ -1,8 +1,0 @@
-{
-  "grantNavJSON" : "/Users/dan/Documents/Repositories/charity-base-data/git_ignore/data/grantnav-20191114124733.json",
-  "db": {
-    "host": "localhost",
-    "port": "27017",
-    "name": "charity-base-v6-4-0-nov-2019"
-  }
-}
