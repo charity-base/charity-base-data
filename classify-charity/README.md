@@ -2,7 +2,11 @@
 
 ## Topic Modelling
 
-This script uses a Java based [topic modelling](https://en.wikipedia.org/wiki/Topic_model) software to automatically generate charitable themes based on groups of words which commonly co-occur i.e. words which often appear near each other in the textual data we have for each charity.  As well as defining the themes, this script also calculates scores for how relevant each theme is to each charity, and persists this information to the database.  This is useful for classifying charities by theme.
+This script uses a Java based topic modelling software to automatically generate charitable themes based on groups of words which commonly co-occur i.e. words which often appear near each other in the textual data we have for each charity.
+
+As well as defining the themes, this script also calculates scores of how relevant each theme is to each charity, and persists this information to the database.  This is useful for classifying charities by theme.
+
+For more background on topic modelling: [https://en.wikipedia.org/wiki/Topic_model](https://en.wikipedia.org/wiki/Topic_model)
 
 ### Requirements
 
@@ -12,7 +16,7 @@ This script uses a Java based [topic modelling](https://en.wikipedia.org/wiki/To
 - [Node v10+](https://nodejs.org)
 - [Yarn](https://yarnpkg.com)
 
-Before running this script the database must be initiated and all the data from the Charity Commission and 360 Giving imported (see the [other directories](../) in this repository for instruction). Much of the textual data imported is used as input in this topic model.
+Before running this script the database must be initiated and all the data from the Charity Commission and 360 Giving imported (see the [other directories](../) in this repository for instruction). Much of the imported textual data is used as input in this topic model.
 
 ### Installing
 
