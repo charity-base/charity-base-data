@@ -10,6 +10,8 @@ This fetches the logos (in three different sizes) of about 40,000 charities, upl
 - [Node v10+](https://nodejs.org)
 - [Yarn](https://yarnpkg.com)
 
+Before running this script the database must be initiated and social media handles imported (see the [other directories](../) in this repository for instruction).
+
 ### Installing
 
 - `yarn`
@@ -19,4 +21,4 @@ This fetches the logos (in three different sizes) of about 40,000 charities, upl
 
 - `yarn import-social-avatars`
 
-Estimated runtime: 2 hrs.
+Estimated runtime: 3 hrs.
