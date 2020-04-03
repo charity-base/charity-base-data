@@ -97,6 +97,7 @@ exports.up = async function (knex) {
     table.text('dummy_1')
 
     table.foreign('recipient_charity_number').references(`${TABLE_CHARITY}.regno`)
+    table.index('recipient_charity_number')
   })
 }
 

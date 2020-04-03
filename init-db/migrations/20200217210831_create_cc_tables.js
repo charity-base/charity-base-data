@@ -36,7 +36,9 @@ exports.up = async function (knex) {
     table.string('phone', 400)
     table.integer('fax')
     table.primary(['regno', 'subno'])
+    table.index('subno')
     table.index('postcode')
+    table.index('orgtype')
   })
 
   await knex.schema.createTable(TABLE_MAIN_CHARITY, table => {
@@ -59,6 +61,7 @@ exports.up = async function (knex) {
     table.string('arno', 4).notNullable()
     table.string('fyend', 4)
     table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
+    table.index('regno')
   })
 
   await knex.schema.createTable(TABLE_AOO_REF, table => {
@@ -76,6 +79,7 @@ exports.up = async function (knex) {
     table.string('arno', 4).notNullable()
     table.datetime('submit_date').notNullable() // actually NULL in cc build scripts
     table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
+    table.index('regno')
   })
 
   await knex.schema.createTable(TABLE_CHARITY_AOO, table => {
@@ -101,6 +105,8 @@ exports.up = async function (knex) {
     table.primary(['regno', 'class'])
     table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
     table.foreign('class').references(`${TABLE_CLASS_REF}.classno`)
+    table.index('regno')
+    table.index('class')
   })
 
   await knex.schema.createTable(TABLE_FINANCIAL, table => {
@@ -110,6 +116,8 @@ exports.up = async function (knex) {
     table.integer('income')
     table.integer('expend')
     table.primary(['regno', 'fystart'])
+    table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
+    table.index('regno')
   })
 
   await knex.schema.createTable(TABLE_NAME, table => {
@@ -177,6 +185,7 @@ exports.up = async function (knex) {
     table.text('cons_acc')
     table.text('charity_acc')
     table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
+    table.index('regno')
   })
 
   await knex.schema.createTable(TABLE_REMOVE_REF, table => {
@@ -190,15 +199,16 @@ exports.up = async function (knex) {
     table.datetime('regdate')
     table.datetime('remdate')
     table.string('remcode', 3)
-    table.primary(['regno', 'subno', 'regdate'])
     table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
     table.foreign('remcode').references(`${TABLE_REMOVE_REF}.code`)
+    table.primary(['regno', 'subno', 'regdate'])
   })
 
   await knex.schema.createTable(TABLE_TRUSTEE, table => {
     table.string('regno', 10).notNullable() // actually NULL in cc build scripts
     table.string('trustee', 255).notNullable() // actually NULL in cc build scripts
     table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
+    table.index('regno')
   })
 }
 
