@@ -67,8 +67,12 @@ const importData = (dbName, bcpDir) => {
       log.info(`Importing data from '${fileName}'`)
 
       try {
+
+        const columns = await knex.raw(`SHOW COLUMNS FROM ${tableName}`)
+        const colsArr = columns[0].map(col => col.Field) // ensure order is same as when creating table
+
         const colsObj = await knex(tableName).columnInfo()
-        const colsArr = Object.keys(colsObj)
+
         const refs = colsArr.map((_, i) => colRef(i)).join(',')
         const set = colsArr.map((colName, i) => {
           return `${colName}=${colVal(colRef(i), colName, colsObj[colName])}`
