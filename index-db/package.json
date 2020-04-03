@@ -1,0 +1,20 @@
+{
+  "name": "charity-base-data-index-db",
+  "version": "1.0.0",
+  "scripts": {
+    "index-db:write-grant": "node grant.js | bunyan",
+    "index-db:write-finance": "node finance.js | bunyan",
+    "index-db:write-name": "node name.js | bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "cli-progress": "^3.6.0",
+    "dotenv": "^8.2.0",
+    "elasticsearch": "^16.6.0",
+    "knex": "^0.20.11",
+    "mysql2": "^2.1.0",
+    "stream-batch-promise": "^1.2.2"
+  }
+}
