@@ -8,7 +8,6 @@ const {
   BATCH_SIZE,
   TABLE_CHARITY_JSON,
   TABLE_FINANCIAL,
-  TABLE_MAIN_CHARITY,
 } = process.env
 
 const PROGRESS_BAR = getProgressBar('Progress')

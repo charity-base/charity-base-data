@@ -23,5 +23,5 @@ Before running this script the database must be initiated and all the data impor
 yarn index-db:write-charity # Estimated runtime: 2 minutes
 yarn index-db:write-grant # Estimated runtime: 1 minute
 yarn index-db:write-finance # Estimated runtime: 5 minutes
-# yarn index-db:write-name
+yarn index-db:write-name # Estimated runtime: 4 minutes
 ```

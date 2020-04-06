@@ -4,6 +4,7 @@ const getProgressBar = require('./lib/progress')
 const log = require('./lib/logger')
 const titleCase = require('./lib/title-case')
 const knex = require('./knex-connection')
+const UPPER_TERMS = require('./charity-name-acronyms')
 
 const {
   BATCH_SIZE,
@@ -54,7 +55,7 @@ const parser = x => {
     chcId,
     cohId,
     orgIds: JSON.stringify(orgIds(chcId, cohId)),
-    primaryName: titleCase(primaryName),
+    primaryName: titleCase(primaryName, UPPER_TERMS),
     activities,
     contact: JSON.stringify({
       address: address.filter(x => x).map(x => titleCase(x)),
