@@ -1,40 +1,39 @@
 require('dotenv').config()
 const streamBatchPromise = require('stream-batch-promise')
-const getProgressBar = require('./lib/progress')
-const log = require('./lib/logger')
-const knex = require('./knex-connection')
+const getProgressBar = require('../lib/progress')
+const log = require('../lib/logger')
+const titleCase = require('../lib/title-case')
+const knex = require('../knex-connection')
+const UPPER_TERMS = require('../charity-name-acronyms')
 
 const {
   BATCH_SIZE,
   TABLE_CHARITY_JSON,
   TABLE_MAIN_CHARITY,
-  TABLE_CLASS_REF,
-  TABLE_CLASS,
+  TABLE_NAME,
 } = process.env
 
 const PROGRESS_BAR = getProgressBar('Progress')
 
 const parser = x => {
-  if (!x.chcId || !x.categories) return null
-
-  // sort by ascending id (subtraction works with number strings)
-  const categories = x.categories.sort((a, b) => (a.id - b.id))
-  const integerIds = categories.map(({ id }) => parseInt(id))
+  if (!x.chcId || !x.names) return null
+  // Sort names by descending nameno
+  const names = x.names
+    .sort((a, b) => b.id - a.id)
+    .map(({ id, name }) => ({ id, name: titleCase(name, UPPER_TERMS) }))
 
   return {
     chcId: x.chcId,
-    causes: JSON.stringify(categories.filter((_, i) => (integerIds[i] < 200))),
-    beneficiaries: JSON.stringify(categories.filter((_, i) => (integerIds[i] >= 200 && integerIds[i] < 300))),
-    operations: JSON.stringify(categories.filter((_, i) => (integerIds[i] >= 300))),
+    names: JSON.stringify(names)
   }
 }
 
 const update = async arr => {
   const updateQueries = arr
-    .map(({ chcId, causes, beneficiaries, operations }) => (
+    .map(({ chcId, names }) => (
       knex(TABLE_CHARITY_JSON)
         .where('chcId', '=', chcId)
-        .update({ causes, beneficiaries, operations })
+        .update({ names })
     ))
   if (updateQueries.length === 0) {
     return
@@ -62,28 +61,29 @@ const batchHandler = (items, counter) => {
 
 const f = async () => {
   try {
-    log.info(`Persisting data from '${TABLE_CLASS}' & '${TABLE_CLASS_REF}' to '${TABLE_CHARITY_JSON}'`)
+    log.info(`Persisting data from '${TABLE_NAME}' to '${TABLE_CHARITY_JSON}'`)
 
-    const countQuery = knex(`${TABLE_CLASS} as class`)
-      .countDistinct('class.regno as numCharities')
-      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'class.regno')
+    const countQuery = knex(`${TABLE_NAME} as n`)
+      .countDistinct('n.regno as numCharities')
+      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'n.regno')
+      .where('n.subno', '=', '0')
 
     const { numCharities } = (await countQuery)[0]
 
     const query = knex
       .select([
-        `class.regno as chcId`,
+        `n.regno as chcId`,
         knex.raw(`JSON_ARRAYAGG(
           JSON_OBJECT(
-            'id', class.class,
-            'name', classRef.classtext
+            'id', n.nameno,
+            'name', n.name
           )
-        ) as categories`),
+        ) as names`),
       ])
-      .from(`${TABLE_CLASS} as class`)
-      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'class.regno')
-      .innerJoin(`${TABLE_CLASS_REF} as classRef`, 'classRef.classno', '=', 'class.class')
-      .groupBy('class.regno')
+      .from(`${TABLE_NAME} as n`)
+      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'n.regno')
+      .where('n.subno', '=', '0')
+      .groupBy('n.regno')
 
     const queryStream = query.stream()
     queryStream.on('error', err => {

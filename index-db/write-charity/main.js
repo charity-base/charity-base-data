@@ -1,10 +1,10 @@
 require('dotenv').config()
 const streamBatchPromise = require('stream-batch-promise')
-const getProgressBar = require('./lib/progress')
-const log = require('./lib/logger')
-const titleCase = require('./lib/title-case')
-const knex = require('./knex-connection')
-const UPPER_TERMS = require('./charity-name-acronyms')
+const getProgressBar = require('../lib/progress')
+const log = require('../lib/logger')
+const titleCase = require('../lib/title-case')
+const knex = require('../knex-connection')
+const UPPER_TERMS = require('../charity-name-acronyms')
 
 const {
   BATCH_SIZE,
