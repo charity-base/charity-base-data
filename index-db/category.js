@@ -8,28 +8,33 @@ const {
   BATCH_SIZE,
   TABLE_CHARITY_JSON,
   TABLE_MAIN_CHARITY,
-  TABLE_OBJECTS,
+  TABLE_CLASS_REF,
+  TABLE_CLASS,
 } = process.env
-
-const MAX_OBJECTIVE_LENGTH = 10000
 
 const PROGRESS_BAR = getProgressBar('Progress')
 
 const parser = x => {
-  if (!x.chcId || !x.objectives) return null
+  if (!x.chcId || !x.categories) return null
+
+  // sort by ascending id (subtraction works with number strings)
+  const categories = x.categories.sort((a, b) => (a.id - b.id))
+  const integerIds = categories.map(({ id }) => parseInt(id))
 
   return {
     chcId: x.chcId,
-    objectives: x.objectives.trim(),
+    causes: JSON.stringify(categories.filter((_, i) => (integerIds[i] < 200))),
+    beneficiaries: JSON.stringify(categories.filter((_, i) => (integerIds[i] >= 200 && integerIds[i] < 300))),
+    operations: JSON.stringify(categories.filter((_, i) => (integerIds[i] >= 300))),
   }
 }
 
 const update = async arr => {
   const updateQueries = arr
-    .map(({ chcId, objectives }) => (
+    .map(({ chcId, causes, beneficiaries, operations }) => (
       knex(TABLE_CHARITY_JSON)
         .where('chcId', '=', chcId)
-        .update({ objectives })
+        .update({ causes, beneficiaries, operations })
     ))
   if (updateQueries.length === 0) {
     return
@@ -57,33 +62,28 @@ const batchHandler = (items, counter) => {
 
 const f = async () => {
   try {
-    log.info(`Persisting data from '${TABLE_OBJECTS}' to '${TABLE_CHARITY_JSON}'`)
+    log.info(`Persisting data from '${TABLE_CLASS}' & '${TABLE_CLASS_REF}' to '${TABLE_CHARITY_JSON}'`)
 
-    const countQuery = knex(`${TABLE_OBJECTS} as o`)
-      .countDistinct('o.regno as numCharities')
-      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'o.regno')
-      .where('o.subno', '=', '0')
+    const countQuery = knex(`${TABLE_CLASS} as class`)
+      .countDistinct('class.regno as numCharities')
+      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'class.regno')
 
     const { numCharities } = (await countQuery)[0]
 
-
-    await knex.raw(`SET SESSION group_concat_max_len = ${MAX_OBJECTIVE_LENGTH};`)
-
-    // Safe to order by seqno (string) as it's left-padded with zeroes.
     const query = knex
       .select([
-        `o.regno as chcId`,
-        knex.raw(`REPLACE(
-          GROUP_CONCAT(
-            o.object ORDER BY o.regno, o.seqno SEPARATOR ''
-          ),
-          '0001',
-          ''
-        ) as objectives`),
+        `class.regno as chcId`,
+        knex.raw(`JSON_ARRAYAGG(
+          JSON_OBJECT(
+            'id', class.class,
+            'name', classRef.classtext
+          )
+        ) as categories`),
       ])
-      .from(`${TABLE_OBJECTS} as o`)
-      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'o.regno')
-      .groupBy('o.regno')
+      .from(`${TABLE_CLASS} as class`)
+      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'class.regno')
+      .innerJoin(`${TABLE_CLASS_REF} as classRef`, 'classRef.classno', '=', 'class.class')
+      .groupBy('class.regno')
 
     const queryStream = query.stream()
     queryStream.on('error', err => {

@@ -7,6 +7,7 @@
     "index-db:write-finance": "node finance.js | bunyan",
     "index-db:write-name": "node name.js | bunyan",
     "index-db:write-objective": "node objective.js | bunyan",
+    "index-db:write-category": "node category.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",

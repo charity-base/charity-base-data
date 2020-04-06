@@ -25,4 +25,5 @@ yarn index-db:write-grant # Estimated runtime: 1 minute
 yarn index-db:write-finance # Estimated runtime: 5 minutes
 yarn index-db:write-name # Estimated runtime: 4 minutes
 yarn index-db:write-objective # Estimated runtime: 4 minutes
+yarn index-db:write-category # Estimated runtime: 3 minutes
 ```
