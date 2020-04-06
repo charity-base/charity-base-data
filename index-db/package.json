@@ -2,12 +2,12 @@
   "name": "charity-base-data-index-db",
   "version": "1.0.0",
   "scripts": {
-    "index-db:write-charity": "node charity.js | bunyan",
-    "index-db:write-grant": "node grant.js | bunyan",
-    "index-db:write-finance": "node finance.js | bunyan",
-    "index-db:write-name": "node name.js | bunyan",
-    "index-db:write-objective": "node objective.js | bunyan",
-    "index-db:write-category": "node category.js | bunyan",
+    "index-db:write-charity-main": "node write-charity/main.js | bunyan",
+    "index-db:write-charity-grant": "node write-charity/grant.js | bunyan",
+    "index-db:write-charity-finance": "node write-charity/finance.js | bunyan",
+    "index-db:write-charity-name": "node write-charity/name.js | bunyan",
+    "index-db:write-charity-objective": "node write-charity/objective.js | bunyan",
+    "index-db:write-charity-category": "node write-charity/category.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",

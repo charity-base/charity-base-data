@@ -20,10 +20,10 @@ Before running this script the database must be initiated and all the data impor
 ### Writing components to charity_json table
 
 ```bash
-yarn index-db:write-charity # Estimated runtime: 2 minutes
-yarn index-db:write-grant # Estimated runtime: 1 minute
-yarn index-db:write-finance # Estimated runtime: 5 minutes
-yarn index-db:write-name # Estimated runtime: 4 minutes
-yarn index-db:write-objective # Estimated runtime: 4 minutes
-yarn index-db:write-category # Estimated runtime: 3 minutes
+yarn index-db:write-charity-main # Estimated runtime: 2 minutes
+yarn index-db:write-charity-grant # Estimated runtime: 1 minute
+yarn index-db:write-charity-finance # Estimated runtime: 5 minutes
+yarn index-db:write-charity-name # Estimated runtime: 4 minutes
+yarn index-db:write-charity-objective # Estimated runtime: 4 minutes
+yarn index-db:write-charity-category # Estimated runtime: 3 minutes
 ```
