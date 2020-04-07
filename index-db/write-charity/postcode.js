@@ -6,28 +6,28 @@ const knex = require('../knex-connection')
 
 const {
   BATCH_SIZE,
+  TABLE_CHARITY,
   TABLE_CHARITY_JSON,
-  TABLE_SOCIAL,
+  TABLE_POSTCODE_GEO,
 } = process.env
 
 const PROGRESS_BAR = getProgressBar('Progress')
 
 const parser = x => {
-  if (!x.chcId) return null
+  if (!x.chcId || !x.postcodeGeo) return null
 
   return {
     chcId: x.chcId,
-    image: JSON.stringify(x.image),
-    social: JSON.stringify(x.social),
+    postcodeGeo: JSON.stringify(x.postcodeGeo),
   }
 }
 
 const update = async arr => {
   const updateQueries = arr
-    .map(({ chcId, image, social }) => (
+    .map(({ chcId, postcodeGeo }) => (
       knex(TABLE_CHARITY_JSON)
         .where('chcId', '=', chcId)
-        .update({ image, social })
+        .update({ postcodeGeo })
     ))
   if (updateQueries.length === 0) {
     return
@@ -55,38 +55,25 @@ const batchHandler = (items, counter) => {
 
 const f = async () => {
   try {
-    log.info(`Persisting data from '${TABLE_SOCIAL}' to '${TABLE_CHARITY_JSON}'`)
+    log.info(`Persisting data from '${TABLE_POSTCODE_GEO}' to '${TABLE_CHARITY_JSON}'`)
 
-    const countQuery = knex(TABLE_SOCIAL)
+    const countQuery = knex(`${TABLE_POSTCODE_GEO} as p`)
+      .innerJoin(`${TABLE_CHARITY} as c`, 'c.postcode', '=', 'p.id')
+      .where('c.subno', '=', '0')
+      .where('c.orgtype', '=', 'R')
       .count('*', { as: 'numCharities' })
 
     const { numCharities } = (await countQuery)[0]
 
     const query = knex
       .select([
-        `s.regno as chcId`,
-        knex.raw(`JSON_OBJECT(
-          'logo', JSON_OBJECT(
-            'small', JSON_OBJECT(
-              'bucket', s.avatar_bucket,
-              'path', s.avatar_small
-            ),
-            'medium', JSON_OBJECT(
-              'bucket', s.avatar_bucket,
-              'path', s.avatar_medium
-            ),
-            'large', JSON_OBJECT(
-              'bucket', s.avatar_bucket,
-              'path', s.avatar_large
-            )
-          )
-        ) as image`),
-        knex.raw(`JSON_OBJECT(
-          'twitter', twitter,
-          'facebook', facebook
-        ) as social`),
+        'c.regno as chcId',
+        'p.postcode_geo as postcodeGeo'
       ])
-      .from(`${TABLE_SOCIAL} as s`)
+      .from(`${TABLE_POSTCODE_GEO} as p`)
+      .innerJoin(`${TABLE_CHARITY} as c`, 'c.postcode', '=', 'p.id')
+      .where('c.subno', '=', '0')
+      .where('c.orgtype', '=', 'R')
 
     const queryStream = query.stream()
     queryStream.on('error', err => {
