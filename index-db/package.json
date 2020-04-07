@@ -11,6 +11,7 @@
     "index-db:write-charity-social": "node write-charity/social.js | bunyan",
     "index-db:write-charity-postcode": "node write-charity/postcode.js | bunyan",
     "index-db:write-charity-registration": "node write-charity/registration.js | bunyan",
+    "index-db:write-charity-topic": "node write-charity/topic.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
