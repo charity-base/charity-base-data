@@ -1,0 +1,28 @@
+{
+  "name": "charity-base-data-transform-db",
+  "version": "1.0.0",
+  "scripts": {
+    "transform-db:charity": "yarn transform-db:charity:main && yarn transform-db:charity:area && yarn transform-db:charity:category && yarn transform-db:charity:finance && yarn transform-db:charity:grant && yarn transform-db:charity:name && yarn transform-db:charity:objective && yarn transform-db:charity:postcode && yarn transform-db:charity:registration && yarn transform-db:charity:social && yarn transform-db:charity:topic",
+    "transform-db:charity:main": "node charity/main.js | bunyan",
+    "transform-db:charity:area": "node charity/area.js | bunyan",
+    "transform-db:charity:category": "node charity/category.js | bunyan",
+    "transform-db:charity:finance": "node charity/finance.js | bunyan",
+    "transform-db:charity:grant": "node charity/grant.js | bunyan",
+    "transform-db:charity:name": "node charity/name.js | bunyan",
+    "transform-db:charity:objective": "node charity/objective.js | bunyan",
+    "transform-db:charity:postcode": "node charity/postcode.js | bunyan",
+    "transform-db:charity:registration": "node charity/registration.js | bunyan",
+    "transform-db:charity:social": "node charity/social.js | bunyan",
+    "transform-db:charity:topic": "node charity/topic.js | bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "cli-progress": "^3.6.0",
+    "dotenv": "^8.2.0",
+    "knex": "^0.20.11",
+    "mysql2": "^2.1.0",
+    "stream-batch-promise": "^1.2.2"
+  }
+}
