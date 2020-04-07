@@ -19,15 +19,23 @@ Before running this script the database must be initiated and all the data impor
 
 ### Writing components to charity_json table
 
+First insert:
+
 ```bash
 yarn index-db:write-charity-main # Estimated runtime: 2 minutes
-yarn index-db:write-charity-grant # Estimated runtime: 1 minute
+```
+
+Then update:
+
+```bash
+yarn index-db:write-charity-area # Estimated runtime: 3 minutes
+yarn index-db:write-charity-category # Estimated runtime: 3 minutes
 yarn index-db:write-charity-finance # Estimated runtime: 5 minutes
+yarn index-db:write-charity-grant # Estimated runtime: 1 minute
 yarn index-db:write-charity-name # Estimated runtime: 4 minutes
 yarn index-db:write-charity-objective # Estimated runtime: 4 minutes
-yarn index-db:write-charity-category # Estimated runtime: 3 minutes
-yarn index-db:write-charity-social # Estimated runtime: 1 minute
 yarn index-db:write-charity-postcode # Estimated runtime: 5 minutes
 yarn index-db:write-charity-registration # Estimated runtime: 3 minutes
+yarn index-db:write-charity-social # Estimated runtime: 1 minute
 yarn index-db:write-charity-topic # Estimated runtime: 2 minutes
 ```
