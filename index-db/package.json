@@ -8,6 +8,7 @@
     "index-db:write-charity-name": "node write-charity/name.js | bunyan",
     "index-db:write-charity-objective": "node write-charity/objective.js | bunyan",
     "index-db:write-charity-category": "node write-charity/category.js | bunyan",
+    "index-db:write-charity-social": "node write-charity/social.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
