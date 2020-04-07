@@ -26,4 +26,5 @@ yarn index-db:write-charity-finance # Estimated runtime: 5 minutes
 yarn index-db:write-charity-name # Estimated runtime: 4 minutes
 yarn index-db:write-charity-objective # Estimated runtime: 4 minutes
 yarn index-db:write-charity-category # Estimated runtime: 3 minutes
+yarn index-db:write-charity-social # Estimated runtime: 1 minute
 ```
