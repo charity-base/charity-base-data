@@ -1,0 +1,17 @@
+{
+  "name": "charity-base-data-index-db",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.6.1",
+    "aws-elasticsearch-connector": "^8.2.0",
+    "aws-sdk": "^2.654.0",
+    "bunyan": "^1.8.12",
+    "cli-progress": "^3.6.1",
+    "dotenv": "^8.2.0",
+    "knex": "^0.20.13",
+    "mysql2": "^2.1.0",
+    "stream-batch-promise": "^1.2.2"
+  }
+}
