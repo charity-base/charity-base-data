@@ -51,4 +51,5 @@ yarn transform-db:charity:social # Estimated runtime: 1 minute
 yarn transform-db:charity:topic # Estimated runtime: 2 minutes
 yarn transform-db:filter:area # Estimated runtime: 1 second
 yarn transform-db:filter:category # Estimated runtime: 1 second
+yarn transform-db:filter:funder # Estimated runtime: 4 seconds
 ```
