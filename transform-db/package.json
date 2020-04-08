@@ -2,6 +2,7 @@
   "name": "charity-base-data-transform-db",
   "version": "1.0.0",
   "scripts": {
+    "transform-db": "yarn transform-db:charity && yarn transform-db:filter",
     "transform-db:charity": "yarn transform-db:charity:main && yarn transform-db:charity:area && yarn transform-db:charity:category && yarn transform-db:charity:finance && yarn transform-db:charity:grant && yarn transform-db:charity:name && yarn transform-db:charity:objective && yarn transform-db:charity:postcode && yarn transform-db:charity:registration && yarn transform-db:charity:social && yarn transform-db:charity:topic",
     "transform-db:charity:main": "node charity/main.js | bunyan",
     "transform-db:charity:area": "node charity/area.js | bunyan",
@@ -14,6 +15,8 @@
     "transform-db:charity:registration": "node charity/registration.js | bunyan",
     "transform-db:charity:social": "node charity/social.js | bunyan",
     "transform-db:charity:topic": "node charity/topic.js | bunyan",
+    "transform-db:filter": "yarn transform-db:filter:area",
+    "transform-db:filter:area": "node filter/area.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
