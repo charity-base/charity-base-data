@@ -3,27 +3,32 @@ const streamBatchPromise = require('stream-batch-promise')
 const getProgressBar = require('../lib/progress')
 const log = require('../lib/logger')
 const clean = require('../lib/clean-filter-suggest')
+const titleCase = require('../lib/title-case')
 const knex = require('../knex-connection')
 
 const {
   BATCH_SIZE,
   TABLE_FILTER_JSON,
-  TABLE_GRANTNAV,
+  TABLE_MAIN_CHARITY,
+  TABLE_NAME,
 } = process.env
 
 const PROGRESS_BAR = getProgressBar('Progress')
 
 const parser = x => {
-  // Sort funder names by most recent grant awarded
-  // So e.g. "The National Lottery Community Fund" comes before "The Big Lottery Fund"
-  const funderNames = x.funderNames.sort((a, b) => new Date(b.latestDate) - new Date(a.latestDate))
+  // Sort name by decreasing id (assumes more up-to-date names have higher ids)
+  const names = x.names.sort((a, b) => b.id - a.id)
 
   return {
-    id: `funder-${x.funderId}`,
-    value: x.funderId,
-    label: funderNames[0].name,
-    filterType: 'funder',
-    suggest: JSON.stringify(funderNames.map(({ name }) => clean(name))),
+    id: `id-${x.chcId}`,
+    value: x.chcId,
+    label: titleCase(names[0].name), // not necessarily primaryName
+    filterType: 'id',
+    suggest: JSON.stringify([
+      x.chcId,
+      `GB-CHC-${x.chcId}`,
+      ...names.map(({ name }) => clean(name)),
+    ]),
   }
 }
 
@@ -59,37 +64,29 @@ const batchHandler = (items, counter) => {
 
 const f = async () => {
   try {
-    log.info(`Persisting data from '${TABLE_GRANTNAV}' to '${TABLE_FILTER_JSON}'`)
+    log.info(`Persisting data from '${TABLE_NAME}' to '${TABLE_FILTER_JSON}'`)
 
-    const countQuery = knex(`${TABLE_GRANTNAV} as g`)
-      .countDistinct('g.funder_id as numFilters')
-      // .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'g.recipient_charity_number')
+    const countQuery = knex(`${TABLE_NAME} as n`)
+      .countDistinct('n.regno as numFilters')
+      .where('n.subno', '=', '0')
+      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'n.regno')
 
     const { numFilters } = (await countQuery)[0]
 
     const query = knex
       .select([
-        'funder_id as funderId',
+        'n.regno as chcId',
         knex.raw(`JSON_ARRAYAGG(
           JSON_OBJECT(
-            'name', funder_name,
-            'latestDate', latest_date
+            'id', n.nameno,
+            'name', n.name
           )
-        ) as funderNames`),
+        ) as names`),
       ])
-      .from(function() {
-        this
-          .select([
-            'funder_id',
-            'funder_name',
-            knex.raw(`MAX(date_awarded) as latest_date`),
-          ])
-          .from(TABLE_GRANTNAV)
-          .whereNotNull('funder_name')
-          .groupBy(['funder_id', 'funder_name'])
-          .as('t1')
-      })
-      .groupBy('funder_id')
+      .from(`${TABLE_NAME} as n`)
+      .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'n.regno')
+      .where('n.subno', '=', '0')
+      .groupBy('n.regno')
 
     const queryStream = query.stream()
     queryStream.on('error', err => {
