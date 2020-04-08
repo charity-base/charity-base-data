@@ -1,0 +1,651 @@
+{
+  "_doc": {
+    "dynamic": "strict",
+    "properties": {
+      "activities": {
+        "type": "text"
+      },
+      "areaOfBenefit": {
+        "type": "text"
+      },
+      "areas": {
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "beneficiaries": {
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "causes": {
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "chcId": {
+        "type": "keyword"
+      },
+      "cohId": {
+        "type": "keyword"
+      },
+      "contact": {
+        "properties": {
+          "address": {
+            "type": "text"
+          },
+          "email": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "phone": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "postcode": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "finances": {
+        "properties": {
+          "financialYear": {
+            "properties": {
+              "begin": {
+                "type": "date"
+              },
+              "end": {
+                "type": "date"
+              }
+            }
+          },
+          "income": {
+            "type": "integer"
+          },
+          "spending": {
+            "type": "integer"
+          }
+        }
+      },
+      "financialYearEnd": {
+        "type": "keyword"
+      },
+      "funding": {
+        "properties": {
+          "funders": {
+            "properties": {
+              "id": {
+                "type": "keyword"
+              },
+              "name": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          },
+          "grants": {
+            "properties": {
+              "id": {
+                "type": "keyword"
+              },
+              "amountAwarded": {
+                "type": "integer"
+              },
+              "awardDate": {
+                "type": "date"
+              },
+              "currency": {
+                "type": "keyword"
+              },
+              "title": {
+                "type": "text"
+              },
+              "description": {
+                "type": "text"
+              },
+              "fundingOrganization": {
+                "properties": {
+                  "id": {
+                    "type": "keyword"
+                  },
+                  "name": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "numFunders": {
+            "type": "short"
+          },
+          "numGrants": {
+            "type": "short"
+          }
+        }
+      },
+      "governingDoc": {
+        "type": "text"
+      },
+      "image": {
+        "properties": {
+          "logo": {
+            "properties": {
+              "small": {
+                "properties": {
+                  "bucket": {
+                    "type": "keyword"
+                  },
+                  "path": {
+                    "type": "keyword"
+                  }
+                }
+              },
+              "medium": {
+                "properties": {
+                  "bucket": {
+                    "type": "keyword"
+                  },
+                  "path": {
+                    "type": "keyword"
+                  }
+                }
+              },
+              "large": {
+                "properties": {
+                  "bucket": {
+                    "type": "keyword"
+                  },
+                  "path": {
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "lastRegistrationDate": {
+        "type": "date"
+      },
+      "names": {
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "numPeople": {
+        "properties": {
+          "employees": {
+            "type": "integer"
+          },
+          "trustees": {
+            "type": "integer"
+          },
+          "volunteers": {
+            "type": "integer"
+          }
+        }
+      },
+      "objectives": {
+        "type": "text"
+      },
+      "operations": {
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "orgIds": {
+        "properties": {
+          "id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "rawId": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "scheme": {
+            "type": "keyword"
+          }
+        }
+      },
+      "postcodeGeo": {
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "codes": {
+            "properties": {
+              "bua11": {
+                "type": "keyword"
+              },
+              "buasd11": {
+                "type": "keyword"
+              },
+              "calncv": {
+                "type": "keyword"
+              },
+              "ccg": {
+                "type": "keyword"
+              },
+              "ced": {
+                "type": "keyword"
+              },
+              "ctry": {
+                "type": "keyword"
+              },
+              "cty": {
+                "type": "keyword"
+              },
+              "eer": {
+                "type": "keyword"
+              },
+              "hlthau": {
+                "type": "keyword"
+              },
+              "laua": {
+                "type": "keyword"
+              },
+              "lep1": {
+                "type": "keyword"
+              },
+              "lep2": {
+                "type": "keyword"
+              },
+              "lsoa11": {
+                "type": "keyword"
+              },
+              "msoa11": {
+                "type": "keyword"
+              },
+              "nhser": {
+                "type": "keyword"
+              },
+              "nuts": {
+                "type": "keyword"
+              },
+              "oa11": {
+                "type": "keyword"
+              },
+              "oac11": {
+                "type": "keyword"
+              },
+              "osgrdind": {
+                "type": "keyword"
+              },
+              "park": {
+                "type": "keyword"
+              },
+              "pcd": {
+                "type": "keyword"
+              },
+              "pcd2": {
+                "type": "keyword"
+              },
+              "pcds": {
+                "type": "keyword"
+              },
+              "pcon": {
+                "type": "keyword"
+              },
+              "pct": {
+                "type": "keyword"
+              },
+              "pfa": {
+                "type": "keyword"
+              },
+              "rgn": {
+                "type": "keyword"
+              },
+              "ru11ind": {
+                "type": "keyword"
+              },
+              "stp": {
+                "type": "keyword"
+              },
+              "teclec": {
+                "type": "keyword"
+              },
+              "ttwa": {
+                "type": "keyword"
+              },
+              "usertype": {
+                "type": "keyword"
+              },
+              "ward": {
+                "type": "keyword"
+              },
+              "wz11": {
+                "type": "keyword"
+              }
+            }
+          },
+          "coordinates": {
+            "properties": {
+              "lat": {
+                "type": "float"
+              },
+              "lon": {
+                "type": "float"
+              },
+              "easting": {
+                "type": "integer"
+              },
+              "northing": {
+                "type": "integer"
+              }
+            }
+          },
+          "names": {
+            "properties": {
+              "ccg": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "cty": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "eer": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "laua": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "lsoa11": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "msoa11": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "pcon": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "ru11ind": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "ttwa": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "ward": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          },
+          "stats": {
+            "properties": {
+              "imd": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "primaryName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "registrations": {
+        "properties": {
+          "registrationDate": {
+            "type": "date"
+          },
+          "removalDate": {
+            "type": "date"
+          },
+          "removalCode": {
+            "type": "keyword"
+          },
+          "removalReason": {
+            "type": "keyword"
+          }
+        }
+      },
+      "social": {
+        "properties": {
+          "facebook": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "twitter": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "topics": {
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 512
+              }
+            }
+          },
+          "score": {
+            "type": "float"
+          }
+        }
+      },
+      "trustees": {
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "otherCharities": {
+            "properties": {
+              "id": {
+                "type": "keyword"
+              },
+              "name": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "status": {
+                "type": "keyword"
+              }
+            }
+          },
+          "trusteeships": {
+            "type": "short"
+          }
+        }
+      },
+      "website": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      }
+    }
+  }
+}

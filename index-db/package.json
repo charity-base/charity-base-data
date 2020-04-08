@@ -2,6 +2,11 @@
   "name": "charity-base-data-index-db",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "index-db": "yarn index-db:charity",
+    "index-db:charity": "node charity.js | bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "license": "MIT",
   "dependencies": {
     "@elastic/elasticsearch": "^7.6.1",
