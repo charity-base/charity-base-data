@@ -71,8 +71,8 @@ const f = async () => {
             'income', income,
             'spending', expend,
             'financialYear', JSON_OBJECT(
-              'begin', fystart,
-              'end', fyend
+              'begin', DATE(fystart),
+              'end', DATE(fyend)
             )
           )
         ) as finances`),

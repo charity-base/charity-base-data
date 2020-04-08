@@ -74,8 +74,8 @@ const f = async () => {
         `r.regno as chcId`,
         knex.raw(`JSON_ARRAYAGG(
           JSON_OBJECT(
-            'registrationDate', r.regdate,
-            'removalDate', r.remdate,
+            'registrationDate', DATE(r.regdate),
+            'removalDate', DATE(r.remdate),
             'removalCode', TRIM(r.remcode),
             'removalReason', TRIM(rRef.text)
           )
