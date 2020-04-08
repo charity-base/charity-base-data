@@ -62,7 +62,6 @@ const parser = x => {
       email,
       phone,
       postcode,
-      social: [],
     }),
     numPeople: JSON.stringify(numPeople),
     areaOfBenefit: titleCase(areaOfBenefit),
