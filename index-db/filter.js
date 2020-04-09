@@ -4,14 +4,14 @@ const getProgressBar = require('./lib/progress')
 const log = require('./lib/logger')
 const client = require('./elastic-client')
 const knex = require('./knex-client')
-const mappings = require('./elastic-mappings-charity')
-const settings = require('./elastic-settings-charity')
+const mappings = require('./elastic-mappings-filter')
+const settings = require('./elastic-settings-filter')
 
 const {
   BATCH_SIZE,
   DB_NAME,
-  TABLE_CHARITY_JSON,
-  CHARITY_BASE_ES_AWS_INDEX_CHARITY,
+  TABLE_FILTER_JSON,
+  CHARITY_BASE_ES_AWS_INDEX_FILTER,
   CHARITY_BASE_ES_AWS_DOC_TYPE,
 } = process.env
 
@@ -22,7 +22,7 @@ const batchHandler = async (docs, counter) => {
     ...agg,
     {
       index: {
-        _index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
+        _index: CHARITY_BASE_ES_AWS_INDEX_FILTER,
         _type: CHARITY_BASE_ES_AWS_DOC_TYPE,
         _id: doc.chcId,
       }
@@ -54,24 +54,19 @@ const batchHandler = async (docs, counter) => {
 
 const f = async () => {
   try {
-    log.info(`Uploading data from 'MySQL:${DB_NAME}.${TABLE_CHARITY_JSON}' to 'Elasticsearch:${CHARITY_BASE_ES_AWS_INDEX_CHARITY}'`)
-
-    // await client.indices.delete({
-    //   index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
-    // })
+    log.info(`Uploading data from 'MySQL:${DB_NAME}.${TABLE_FILTER_JSON}' to 'Elasticsearch:${CHARITY_BASE_ES_AWS_INDEX_FILTER}'`)
 
     await client.indices.create({
-      index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
+      index: CHARITY_BASE_ES_AWS_INDEX_FILTER,
       body: { mappings, settings }
     })
 
-    const countQuery = knex(TABLE_CHARITY_JSON)
-      .count('*', { as: 'numCharities' })
+    const countQuery = knex(TABLE_FILTER_JSON)
+      .count('*', { as: 'numFilters' })
 
-    const { numCharities } = (await countQuery)[0]
-    log.info('numCharities', numCharities)
+    const { numFilters } = (await countQuery)[0]
 
-    const query = knex(TABLE_CHARITY_JSON).select('*')
+    const query = knex(TABLE_FILTER_JSON).select('*')
 
     const queryStream = query.stream()
     queryStream.on('error', err => {
@@ -80,7 +75,7 @@ const f = async () => {
       throw err
     })
 
-    PROGRESS_BAR.start(numCharities, 0)
+    PROGRESS_BAR.start(numFilters, 0)
     const total = await streamBatchPromise(
       queryStream,
       batchHandler,
@@ -91,20 +86,6 @@ const f = async () => {
     PROGRESS_BAR.update(total)
     PROGRESS_BAR.stop()
     log.info(`Successfully streamed through ${total} items`)
-
-    // const mapping = await client.indices.getMapping({
-    //   index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
-    // })
-    // log.info('MAPPING')
-    // log.info(mapping)
-
-    // const { body } = await client.search({
-    //   index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
-    //   body: {
-    //     query: { match_all: {} }
-    //   }
-    // })
-    // log.info(JSON.stringify(body.hits.hits[0]))
 
     await knex.destroy()
   } catch(e) {
