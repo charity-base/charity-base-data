@@ -16,18 +16,21 @@ const PROGRESS_BAR = getProgressBar('Progress')
 const parser = x => {
   if (!x.chcId || !x.postcodeGeo) return null
 
+  const { lat, lon } = x.postcodeGeo.coordinates || {}
+
   return {
     chcId: x.chcId,
     postcodeGeo: JSON.stringify(x.postcodeGeo),
+    postcodeGeoPoint: JSON.stringify({ lat, lon }),
   }
 }
 
 const update = async arr => {
   const updateQueries = arr
-    .map(({ chcId, postcodeGeo }) => (
+    .map(({ chcId, postcodeGeo, postcodeGeoPoint }) => (
       knex(TABLE_CHARITY_JSON)
         .where('chcId', '=', chcId)
-        .update({ postcodeGeo })
+        .update({ postcodeGeo, postcodeGeoPoint })
     ))
   if (updateQueries.length === 0) {
     return

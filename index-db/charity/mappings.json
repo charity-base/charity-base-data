@@ -300,6 +300,9 @@
           }
         }
       },
+      "postcodeGeoPoint": {
+        "type": "geo_point"
+      },
       "postcodeGeo": {
         "properties": {
           "id": {
