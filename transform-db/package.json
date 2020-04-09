@@ -15,11 +15,12 @@
     "transform-db:charity:registration": "node charity/registration.js | bunyan",
     "transform-db:charity:social": "node charity/social.js | bunyan",
     "transform-db:charity:topic": "node charity/topic.js | bunyan",
-    "transform-db:filter": "yarn transform-db:filter:area && yarn transform-db:filter:category && yarn transform-db:filter:funder && yarn transform-db:filter:id",
+    "transform-db:filter": "yarn transform-db:filter:area && yarn transform-db:filter:category && yarn transform-db:filter:funder && yarn transform-db:filter:id && yarn transform-db:filter:topic",
     "transform-db:filter:area": "node filter/area.js | bunyan",
     "transform-db:filter:category": "node filter/category.js | bunyan",
     "transform-db:filter:funder": "node filter/funder.js | bunyan",
     "transform-db:filter:id": "node filter/id.js | bunyan",
+    "transform-db:filter:topic": "node filter/topic.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",

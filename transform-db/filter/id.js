@@ -50,16 +50,10 @@ const update = async arr => {
 }
 
 const batchHandler = (items, counter) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const docs = items.map(parser).filter(x => x)
-      await update(docs)
-      PROGRESS_BAR.update(counter)
-      resolve()
-    } catch(e) {
-      reject(e)
-    }
-  })
+  const docs = items.map(parser).filter(x => x)
+  await update(docs)
+  PROGRESS_BAR.update(counter)
+  return
 }
 
 const f = async () => {

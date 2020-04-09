@@ -8,29 +8,18 @@ const knex = require('../knex-connection')
 const {
   BATCH_SIZE,
   TABLE_FILTER_JSON,
-  TABLE_CLASS_REF,
+  TABLE_TOPIC,
 } = process.env
 
 const PROGRESS_BAR = getProgressBar('Progress')
 
 const parser = x => {
-  const intId = parseInt(x.value)
-
-  let filterType
-  if (intId < 200) {
-    filterType = 'cause'
-  } else if (intId >= 300) {
-    filterType = 'operation'
-  } else {
-    filterType = 'beneficiary'
-  }
-
   return {
-    id: `${filterType}-${x.value}`,
+    id: `topic-${x.value}`,
     value: x.value,
     label: x.label,
-    filterType: filterType,
-    suggest: JSON.stringify(x.suggest.map(clean)),
+    filterType: 'topic',
+    suggest: JSON.stringify([clean(x.label)]),
   }
 }
 
@@ -51,7 +40,7 @@ const update = async arr => {
   return transaction
 }
 
-const batchHandler = (items, counter) => {
+const batchHandler = async (items, counter) => {
   const docs = items.map(parser).filter(x => x)
   await update(docs)
   PROGRESS_BAR.update(counter)
@@ -60,20 +49,19 @@ const batchHandler = (items, counter) => {
 
 const f = async () => {
   try {
-    log.info(`Persisting data from '${TABLE_CLASS_REF}' to '${TABLE_FILTER_JSON}'`)
+    log.info(`Persisting data from '${TABLE_TOPIC}' to '${TABLE_FILTER_JSON}'`)
 
-    const countQuery = knex(TABLE_CLASS_REF)
+    const countQuery = knex(TABLE_TOPIC)
       .count('*', { as: 'numFilters' })
 
     const { numFilters } = (await countQuery)[0]
 
     const query = knex
       .select([
-        'classno as value',
-        'classtext as label',
-        knex.raw(`JSON_ARRAY(classtext) as suggest`),
+        'id as value',
+        'tokens as label',
       ])
-      .from(TABLE_CLASS_REF)
+      .from(TABLE_TOPIC)
 
     const queryStream = query.stream()
     queryStream.on('error', err => {
