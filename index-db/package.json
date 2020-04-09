@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "index-db": "yarn index-db:charity",
+    "index-db": "yarn index-db:charity && yarn index-db:filter",
     "index-db:charity": "node charity.js | bunyan",
+    "index-db:filter": "node filter.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",

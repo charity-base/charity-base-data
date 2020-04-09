@@ -19,18 +19,18 @@ Before running this script the database must be initiated and transformed to JSO
 
 ### Persisting Documents to Elasticsearch
 
-#### Whole Process
-
 ```bash
-yarn index-db # Estimated runtime:
+yarn index-db # Estimated runtime: 17 minutes
 ```
 
-#### Sub Processes
-
-Instead of the above you may prefer to run the process step-by-step.
-
-First, upload charity documents:
+Or just charity documents:
 
 ```bash
 yarn index-db:charity # Estimated runtime: 11 minutes
+```
+
+Or just filter documents:
+
+```bash
+yarn index-db:filter # Estimated runtime: 6 minutes
 ```

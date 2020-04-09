@@ -1,0 +1,24 @@
+{
+  "_doc": {
+    "dynamic": "strict",
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "suggest": {
+        "type": "text",
+        "analyzer": "autocomplete",
+        "search_analyzer": "autocomplete_search"
+      },
+      "value": {
+        "type": "keyword"
+      },
+      "label": {
+        "type": "keyword"
+      },
+      "filterType": {
+        "type": "keyword"
+      }
+    }
+  }
+}
