@@ -68,18 +68,12 @@ const f = async () => {
 
     const { numCharities } = (await countQuery)[0]
 
-    const epoch = Date.now()
-
     const query = knex
       .select([
         'ct.regno as chcId',
         knex.raw(`JSON_ARRAYAGG(
           JSON_OBJECT(
-            'id', CONCAT_WS(
-              '-',
-              ${epoch},
-              ct.topic_id
-            ),
+            'id', ct.topic_id,
             'name', t.tokens,
             'score', ROUND(ct.score, 3)
           )

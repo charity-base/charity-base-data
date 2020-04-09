@@ -20,6 +20,7 @@ const {
 const NUM_TOKENS = 20 // number of words each topic is defined by
 const FILENAME_TOPIC = 'topics.tsv'
 const FILENAME_CHARITY_TOPIC = 'doc_topics.tsv'
+const EPOCH = Date.now()
 
 const knex = require('knex')({
   client: 'mysql2',
@@ -33,6 +34,8 @@ const knex = require('knex')({
 })
 
 const PROGRESS_BAR = getProgressBar('Progress')
+
+const stamp = id => `${EPOCH}-${id}`
 
 const insertCharityTopics = arr => {
   return knex.transaction(trx => {
@@ -92,8 +95,8 @@ const f = async () => {
     const topicTsvToJson = csv({
       separator: '\t',
       headers: ['id', 'occurrence', ...[...new Array(NUM_TOKENS)].map((_, i) => `token_${i}`)],
-      mapValues: ({ header, index, value }) => {
-        return index === 0 ? parseInt(value) : value
+      mapValues: ({ header, value }) => {
+        return header === 'id' ? stamp(value) : value
       }
     }).on('error', e => { throw e })
 
@@ -127,7 +130,7 @@ const f = async () => {
 
     const tsvToJson = csv({
       separator: '\t',
-      headers: ['id', 'regno', ...[...new Array(parseInt(MALLET_NUM_TOPICS))].map((_, i) => i)],
+      headers: ['id', 'regno', ...[...new Array(parseInt(MALLET_NUM_TOPICS))].map((_, i) => stamp(i))],
       mapValues: ({ header, index, value }) => {
         return index > 1 ? Math.round(parseFloat(value)*Math.pow(10, 3))/Math.pow(10, 3) : value
       }
