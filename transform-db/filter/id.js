@@ -2,9 +2,10 @@ require('dotenv').config()
 const streamBatchPromise = require('stream-batch-promise')
 const getProgressBar = require('../lib/progress')
 const log = require('../lib/logger')
-const clean = require('../lib/clean-filter-suggest')
+const clean = require('../lib/ngram-case')
 const titleCase = require('../lib/title-case')
 const knex = require('../knex-connection')
+const UPPER_TERMS = require('../charity-name-acronyms')
 
 const {
   BATCH_SIZE,
@@ -22,7 +23,7 @@ const parser = x => {
   return {
     id: `id-${x.chcId}`,
     value: x.chcId,
-    label: titleCase(names[0].name), // not necessarily primaryName
+    label: titleCase(names[0].name, UPPER_TERMS), // not necessarily primaryName
     filterType: 'id',
     suggest: JSON.stringify([
       x.chcId,

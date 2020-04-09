@@ -1,3 +1,4 @@
+// Prepares string for being indexed with Elasticsearch's edge_ngram tokenizer
 const cleanText = x => {
   if (!x) {
     return ''
