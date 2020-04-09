@@ -1,8 +1,8 @@
 require('dotenv').config()
 const streamBatchPromise = require('stream-batch-promise')
-const getProgressBar = require('./lib/progress')
-const log = require('./lib/logger')
-const knex = require('./knex-connection')
+const getProgressBar = require('../lib/progress')
+const log = require('../lib/logger')
+const knex = require('../knex-connection')
 
 const {
   BATCH_SIZE,
