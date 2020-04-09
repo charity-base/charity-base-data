@@ -1,11 +1,11 @@
 require('dotenv').config()
 const streamBatchPromise = require('stream-batch-promise')
-const getProgressBar = require('./lib/progress')
-const log = require('./lib/logger')
-const client = require('./elastic-client')
-const knex = require('./knex-client')
-const mappings = require('./elastic-mappings-charity')
-const settings = require('./elastic-settings-charity')
+const getProgressBar = require('../lib/progress')
+const log = require('../lib/logger')
+const client = require('../lib/elastic-client')
+const knex = require('../lib/knex-client')
+const mappings = require('./mappings')
+const settings = require('./settings')
 
 const {
   BATCH_SIZE,
@@ -56,10 +56,6 @@ const f = async () => {
   try {
     log.info(`Uploading data from 'MySQL:${DB_NAME}.${TABLE_CHARITY_JSON}' to 'Elasticsearch:${CHARITY_BASE_ES_AWS_INDEX_CHARITY}'`)
 
-    // await client.indices.delete({
-    //   index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
-    // })
-
     await client.indices.create({
       index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
       body: { mappings, settings }
@@ -69,7 +65,6 @@ const f = async () => {
       .count('*', { as: 'numCharities' })
 
     const { numCharities } = (await countQuery)[0]
-    log.info('numCharities', numCharities)
 
     const query = knex(TABLE_CHARITY_JSON).select('*')
 
@@ -91,20 +86,6 @@ const f = async () => {
     PROGRESS_BAR.update(total)
     PROGRESS_BAR.stop()
     log.info(`Successfully streamed through ${total} items`)
-
-    // const mapping = await client.indices.getMapping({
-    //   index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
-    // })
-    // log.info('MAPPING')
-    // log.info(mapping)
-
-    // const { body } = await client.search({
-    //   index: CHARITY_BASE_ES_AWS_INDEX_CHARITY,
-    //   body: {
-    //     query: { match_all: {} }
-    //   }
-    // })
-    // log.info(JSON.stringify(body.hits.hits[0]))
 
     await knex.destroy()
   } catch(e) {
