@@ -230,7 +230,7 @@
       "names": {
         "properties": {
           "id": {
-            "type": "integer"
+            "type": "keyword"
           },
           "name": {
             "type": "text",
@@ -602,7 +602,7 @@
       "trustees": {
         "properties": {
           "id": {
-            "type": "integer"
+            "type": "keyword"
           },
           "name": {
             "type": "text",

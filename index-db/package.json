@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "index-db": "yarn index-db:charity && yarn index-db:filter",
-    "index-db:charity": "node charity.js | bunyan",
-    "index-db:filter": "node filter.js | bunyan",
+    "index-db:charity": "node charity/index.js | bunyan",
+    "index-db:filter": "node filter/index.js | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",

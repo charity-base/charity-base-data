@@ -1,11 +1,11 @@
 require('dotenv').config()
 const streamBatchPromise = require('stream-batch-promise')
-const getProgressBar = require('./lib/progress')
-const log = require('./lib/logger')
-const client = require('./elastic-client')
-const knex = require('./knex-client')
-const mappings = require('./elastic-mappings-filter')
-const settings = require('./elastic-settings-filter')
+const getProgressBar = require('../lib/progress')
+const log = require('../lib/logger')
+const client = require('../lib/elastic-client')
+const knex = require('../lib/knex-client')
+const mappings = require('./mappings')
+const settings = require('./settings')
 
 const {
   BATCH_SIZE,
