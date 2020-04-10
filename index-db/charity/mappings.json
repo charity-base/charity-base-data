@@ -98,21 +98,45 @@
       },
       "finances": {
         "properties": {
-          "financialYear": {
+          "annual": {
             "properties": {
-              "begin": {
-                "type": "date"
+              "financialYear": {
+                "properties": {
+                  "begin": {
+                    "type": "date"
+                  },
+                  "end": {
+                    "type": "date"
+                  }
+                }
               },
-              "end": {
-                "type": "date"
+              "income": {
+                "type": "integer"
+              },
+              "spending": {
+                "type": "integer"
               }
             }
           },
-          "income": {
-            "type": "integer"
-          },
-          "spending": {
-            "type": "integer"
+          "latest": {
+            "properties": {
+              "financialYear": {
+                "properties": {
+                  "begin": {
+                    "type": "date"
+                  },
+                  "end": {
+                    "type": "date"
+                  }
+                }
+              },
+              "income": {
+                "type": "integer"
+              },
+              "spending": {
+                "type": "integer"
+              }
+            }
           }
         }
       },
