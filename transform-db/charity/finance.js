@@ -13,13 +13,14 @@ const {
 const PROGRESS_BAR = getProgressBar('Progress')
 
 const parser = x => {
-  if (!x.chcId || !x.finances) return null
+  if (!x.chcId || !x.annual) return null
   // Sort finances by descending financial year
-  const finances = x.finances.sort((a, b) => new Date(b.financialYear.end) - new Date(a.financialYear.end))
+  const annual = x.annual.sort((a, b) => new Date(b.financialYear.end) - new Date(a.financialYear.end))
+  const latest = annual[0]
 
   return {
     chcId: x.chcId,
-    finances: JSON.stringify(finances)
+    finances: JSON.stringify({ annual, latest })
   }
 }
 
@@ -60,6 +61,7 @@ const f = async () => {
 
     const countQuery = knex(TABLE_FINANCIAL)
       .countDistinct('regno as numCharities')
+      .whereNotNull('income')
 
     const { numCharities } = (await countQuery)[0]
 
@@ -75,9 +77,10 @@ const f = async () => {
               'end', DATE(fyend)
             )
           )
-        ) as finances`),
+        ) as annual`),
       ])
       .from(TABLE_FINANCIAL)
+      .whereNotNull('income')
       .groupBy('regno')
 
     const queryStream = query.stream()
