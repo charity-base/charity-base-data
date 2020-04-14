@@ -17,8 +17,6 @@ const downloadUnzip = (url, path) => (
       reject('Missing download destination')
     }
 
-    log.info('path ', path)
-
     let bytes = 0
     let i = 0
     let progressBar
