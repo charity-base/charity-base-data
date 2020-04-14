@@ -16,6 +16,6 @@ This script downloads and unzips Charity Commission data from http://data.charit
 
 ### Downloading & Unzipping CC data
 
-- `yarn download-cc`
-
-Estimated runtime: 2 minutes
+```bash
+yarn download-cc # Estimated runtime: 1 minute
+```
