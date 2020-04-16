@@ -34,3 +34,10 @@ Or just filter documents:
 ```bash
 yarn index-db:filter # Estimated runtime: 6 minutes
 ```
+
+
+### Deleting Index
+
+```bash
+yarn delete-index MY_INDEX_NAME # Estimated runtime: 1 second
+```

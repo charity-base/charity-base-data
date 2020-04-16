@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "delete-index": "node ./delete-index.js",
     "index-db": "yarn index-db:charity && yarn index-db:filter",
     "index-db:charity": "node charity/index.js | bunyan",
     "index-db:filter": "node filter/index.js | bunyan",
