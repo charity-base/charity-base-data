@@ -27,13 +27,13 @@ const dropDatabase = (conn, dbName) => {
 
 const f = () => {
   const dbName = process.env.DB_NAME
-  rl.question(`Are you sure you want to drop database '${dbName}? [y/N]' `, async (answer) => {
+  rl.question(`Are you sure you want to drop database '${dbName}'? [y/N] `, async (answer) => {
     try {
       if (answer && answer.toLowerCase() === 'y') {
         log.info(`Dropping database '${dbName}'`)
         await dropDatabase(connection, dbName)
       } else {
-        log.info('Exiting down without dropping database')
+        log.info('Exiting without deleting index')
       }
     } catch(e) {
       log.error(e.message)
