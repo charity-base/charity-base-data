@@ -22,6 +22,6 @@ This script imports the Charity Commission's .bcp files into a MySQL database.
 
 ### Importing data
 
-- `yarn import-cc`
-
-Estimated runtime: 2 minutes
+```bash
+yarn import-cc # Estimated runtime: 2 minutes
+```

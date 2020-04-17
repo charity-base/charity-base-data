@@ -22,6 +22,8 @@ const TABLE_TRUSTEE = 'cc_extract_trustee'
 const colRef = i => `@col${i}`
 const colVal = (ref, colName, { nullable, type }) => {
   let val = ref
+  // TODO: if integer field, convert to abs value (to prevent -ve expend of charity 328160)
+
   // Trim all string values
   if (['varchar', 'text'].includes(type)) {
     val = `TRIM(${val})`
@@ -67,7 +69,6 @@ const importData = (dbName, bcpDir) => {
       log.info(`Importing data from '${fileName}'`)
 
       try {
-
         const columns = await knex.raw(`SHOW COLUMNS FROM ${tableName}`)
         const colsArr = columns[0].map(col => col.Field) // ensure order is same as when creating table
 
