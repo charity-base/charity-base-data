@@ -26,36 +26,32 @@ const colVal = (ref, colName, { nullable, type }) => {
   return val
 }
 
-const importData = (dbName, tableName, filePath) => {
-  return new Promise(async (resolve, reject) => {
-    log.info(`Importing data from '${filePath}'`)
+const importData = async (dbName, tableName, filePath) => {
+  log.info(`Importing data from '${filePath}'`)
 
-    try {
-      const colsObj = await knex(tableName).columnInfo()
-      const colsArr = Object.keys(colsObj)
-      const refs = colsArr.map((_, i) => colRef(i)).join(',')
-      const set = colsArr.map((colName, i) => {
-        return `${colName}=${colVal(colRef(i), colName, colsObj[colName])}`
-      }).join(',')
+  const columns = await knex.raw(`SHOW COLUMNS FROM ${tableName}`)
+  const colsArr = columns[0].map(col => col.Field) // ensure order is same as when creating table
 
-      const sql = `
-        LOAD DATA
-          INFILE '${filePath}'
-          IGNORE
-          INTO TABLE ${dbName}.${tableName}
-          FIELDS
-            TERMINATED BY ','
-            ENCLOSED BY '"'
-          IGNORE 1 LINES
-          (${refs})
-          SET ${set};
-      `
-      await knex.raw(sql)
-    } catch(e) {
-      return reject(e)
-    }
-    resolve()
-  })
+  const colsObj = await knex(tableName).columnInfo()
+
+  const refs = colsArr.map((_, i) => colRef(i)).join(',')
+  const set = colsArr.map((colName, i) => {
+    return `${colName}=${colVal(colRef(i), colName, colsObj[colName])}`
+  }).join(',')
+
+  const sql = `
+    LOAD DATA
+      INFILE '${filePath}'
+      IGNORE
+      INTO TABLE ${dbName}.${tableName}
+      FIELDS
+        TERMINATED BY ','
+        ENCLOSED BY '"'
+      IGNORE 1 LINES
+      (${refs})
+      SET ${set};
+  `
+  return knex.raw(sql)
 }
 
 const f = async () => {
