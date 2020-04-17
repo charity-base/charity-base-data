@@ -27,41 +27,31 @@ const knex = require('knex')({
 const PROGRESS_BAR = getProgressBar('Progress')
 
 const update = arr => {
-  return new Promise((resolve, reject) => {
-    knex.transaction(trx => {
-      const updateQueries = arr
-        .map(({ id, activities, people }) => (
-          knex(TABLE_MAIN_CHARITY)
-            .where('regno', '=', id)
-            .update({ activities, people: JSON.stringify(people) })
-            .transacting(trx)
-        ))
-      return Promise.all(updateQueries)
-        .then(trx.commit)    
-        .catch(trx.rollback)
-    })
-    .then(updates => {
-      resolve()
-    })
-    .catch(reject)
+  return knex.transaction(trx => {
+    const updateQueries = arr
+      .map(({ id, activities, people }) => (
+        knex(TABLE_MAIN_CHARITY)
+          .where('regno', '=', id)
+          .update({ activities, people: JSON.stringify(people) })
+          .transacting(trx)
+      ))
+    return Promise.all(updateQueries)
+      .then(trx.commit)
+      .catch(trx.rollback)
   })
 }
 
-const batchHandler = (items, counter) => {
+const batchHandler = async (items, counter) => {
+  const dataArr = await Promise.all(items.map(x => fetchData(x.regno)))
+  await update(dataArr.filter(x => x))
   PROGRESS_BAR.update(counter)
-  return new Promise(async (resolve, reject) => {
-    try {
-      const dataArr = await Promise.all(items.map(x => fetchData(x.regno)))
-      await update(dataArr.filter(x => x))
-      resolve()
-    } catch(e) {
-      reject(e)
-    }
-  })
+  return
 }
 
 const f = async () => {
   try {
+    log.info(`Importing data into '${TABLE_MAIN_CHARITY}' from CC beta site`)
+
     const countQuery = knex(TABLE_MAIN_CHARITY)
       .where({
         [`${TABLE_MAIN_CHARITY}.activities`]: null,
@@ -83,10 +73,17 @@ const f = async () => {
         [`${TABLE_MAIN_CHARITY}.people`]: null,
       })
 
-    log.info(`Importing data into '${TABLE_MAIN_CHARITY}' from CC beta site`)
+    const queryStream = charitiesToUpdate.stream()
+    queryStream.on('error', err => {
+      log.error('Query stream error')
+      log.error(err)
+      throw err
+    })
+    // queryStream.on('pause', () => log.info('pause'))
+    // queryStream.on('resume', () => log.info('resume'))
 
     const total = await streamBatchPromise(
-      charitiesToUpdate.stream(),
+      queryStream,
       batchHandler,
       {
         batchSize: BATCH_SIZE,
@@ -94,7 +91,7 @@ const f = async () => {
     )
     PROGRESS_BAR.update(total)
     PROGRESS_BAR.stop()
-    log.info(`Successfully searched for ${total} postcodes`)
+    log.info(`Successfully streamed through ${total} items`)
     await knex.destroy()
   } catch(e) {
     log.error(e)
