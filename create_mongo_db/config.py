@@ -1,6 +1,0 @@
-SQL_DB_USER = "root"
-SQL_DB_HOST = "localhost"
-SQL_DB_NAME = "RegPlusExtract_June_2018"
-MONGO_DB_HOST = "localhost"
-MONGO_DB_NAME = "charity-base"
-MONGO_DB_COLLECTION = "charities"
