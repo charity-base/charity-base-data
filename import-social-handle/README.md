@@ -2,6 +2,8 @@
 
 ## Scraping Social Media Handle from Charity Websites
 
+Extracts twitter and facebook handles from charity websites.  Also cleans the charity website field in the CC table.
+
 ### Requirements
 
 - [MySQL v8+](https://www.mysql.com)

@@ -98,7 +98,7 @@ const batchHandler = (items, counter) => {
         items,
         fetchData
       )
-      await update(dataArr.filter(x => x))
+      await update(dataArr.filter(x => x)) // todo: update website even if no data returned
       PROGRESS_BAR.update(counter)
       resolve()
     } catch(e) {
