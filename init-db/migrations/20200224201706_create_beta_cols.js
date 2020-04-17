@@ -4,6 +4,7 @@ exports.up = async function(knex) {
   await knex.schema.alterTable(TABLE_MAIN_CHARITY, table => {
     table.text('activities')
     table.json('people')
+    // todo: index these cols to speed up import-cc-beta?
   })
 }
 

@@ -88,10 +88,10 @@ exports.up = async function (knex) {
     table.integer('aookey').notNullable() // actually NULL in cc build scripts
     table.string('welsh', 1).notNullable() // actually NULL in cc build scripts
     table.integer('master')
-    table.primary(['regno', 'aootype', 'aookey'])
     table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
     table.foreign(['aootype', 'aookey']).references([`${TABLE_AOO_REF}.aootype`, `${TABLE_AOO_REF}.aookey`])
-    // table.foreign('aookey').references(`${TABLE_AOO_REF}.aookey`)
+    table.primary(['regno', 'aootype', 'aookey'])
+    table.index(['aootype', 'aookey'])
   })
 
   await knex.schema.createTable(TABLE_CLASS_REF, table => {
@@ -196,12 +196,13 @@ exports.up = async function (knex) {
   await knex.schema.createTable(TABLE_REGISTRATION, table => {
     table.string('regno', 10)
     table.string('subno', 4)
-    table.datetime('regdate')
-    table.datetime('remdate')
+    table.datetime('regdate') // could these be changed to date type?
+    table.datetime('remdate') // could these be changed to date type?
     table.string('remcode', 3)
     table.foreign('regno').references(`${TABLE_CHARITY}.regno`)
     table.foreign('remcode').references(`${TABLE_REMOVE_REF}.code`)
     table.primary(['regno', 'subno', 'regdate'])
+    table.index('remcode')
   })
 
   await knex.schema.createTable(TABLE_TRUSTEE, table => {
