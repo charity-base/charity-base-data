@@ -1,4 +1,7 @@
 git_ignore
+.DS_Store
+
+classify-charity/data
 
 # Data
 *.bcp
