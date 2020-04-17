@@ -164,7 +164,7 @@ const f = async () => {
     )
     PROGRESS_BAR.update(total)
     PROGRESS_BAR.stop()
-    log.info(`Successfully searched for ${total} postcodes`)
+    log.info(`Successfully streamed through ${total} items`)
     await knex.destroy()
   } catch(e) {
     log.error(e)
