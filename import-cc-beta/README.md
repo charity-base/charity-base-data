@@ -15,6 +15,6 @@
 
 ### Importing Data
 
-- `yarn import-cc-beta`
-
-Estimated runtime: 3 hours
+```bash
+yarn import-cc-beta # Estimated runtime: 3 hours
+```
