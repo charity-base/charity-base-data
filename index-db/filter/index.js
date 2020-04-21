@@ -24,7 +24,7 @@ const batchHandler = async (docs, counter) => {
       index: {
         _index: CHARITY_BASE_ES_AWS_INDEX_FILTER,
         _type: CHARITY_BASE_ES_AWS_DOC_TYPE,
-        _id: doc.chcId,
+        _id: doc.id,
       }
     },
     doc
