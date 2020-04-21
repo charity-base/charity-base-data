@@ -50,7 +50,7 @@ const update = async arr => {
   return transaction
 }
 
-const batchHandler = (items, counter) => {
+const batchHandler = async (items, counter) => {
   const docs = items.map(parser).filter(x => x)
   await update(docs)
   PROGRESS_BAR.update(counter)
