@@ -44,7 +44,7 @@ const update = async arr => {
   return transaction
 }
 
-const batchHandler = (items, counter) => {
+const batchHandler = async (items, counter) => {
   const docs = items.map(parser).filter(x => x)
   await update(docs)
   PROGRESS_BAR.update(counter)
@@ -55,8 +55,9 @@ const f = async () => {
   try {
     log.info(`Persisting data from '${TABLE_GRANTNAV}' to '${TABLE_FILTER_JSON}'`)
 
-    const countQuery = knex(`${TABLE_GRANTNAV} as g`)
-      .countDistinct('g.funder_id as numFilters')
+    const countQuery = knex(TABLE_GRANTNAV)
+      .countDistinct('funder_id as numFilters')
+      .whereNotNull('funder_name')
       // .innerJoin(`${TABLE_MAIN_CHARITY} as mc`, 'mc.regno', '=', 'g.recipient_charity_number')
 
     const { numFilters } = (await countQuery)[0]
