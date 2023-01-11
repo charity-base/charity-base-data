@@ -16,7 +16,7 @@
     "cli-progress": "^3.6.0",
     "csv-parser": "^2.3.2",
     "dotenv": "^8.2.0",
-    "knex": "^0.20.11",
+    "knex": "^2.4.0",
     "mallet-topics": "2.3.0",
     "mysql2": "^2.1.0",
     "stream-batch-promise": "^1.2.2"
