@@ -14,7 +14,7 @@
     "cheerio": "^1.0.0-rc.3",
     "cli-progress": "^3.6.0",
     "dotenv": "^8.2.0",
-    "knex": "^0.20.10",
+    "knex": "^2.4.0",
     "mysql2": "^2.1.0",
     "node-fetch": "^2.6.0",
     "stream-batch-promise": "^1.2.2"
