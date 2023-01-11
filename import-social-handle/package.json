@@ -17,7 +17,7 @@
     "cli-progress": "^3.6.0",
     "dotenv": "^8.2.0",
     "js-levenshtein": "^1.1.6",
-    "knex": "^0.20.10",
+    "knex": "^2.4.0",
     "mysql2": "^2.1.0",
     "node-fetch": "^2.6.0",
     "stream-batch-promise": "^1.2.2",
